@@ -1,4 +1,4 @@
-package inc.conferatus.grocerysenpai.presentation.shoppinglist
+package inc.conferatus.grocerysenpai.presentation.grocerylist
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 //class GroceryListViewModel @Inject constructor(
 //
 //): ViewModel() {
+// todo часть логики отсюда будет в модели
 class GroceryListViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(GroceryListUiState())
     val uiState = _uiState.asStateFlow()
@@ -20,32 +21,44 @@ class GroceryListViewModel : ViewModel() {
     var itemInput by mutableStateOf("")
         private set
 
+    var itemInputValidate by mutableStateOf(false)
+        private set
+
+    init {
+        validateItemInput()
+    }
+
     fun addItem() {
         _uiState.update {
             it.copy(
                 groceryListItems = it.groceryListItems.plus(GroceryListItem(name = itemInput))
             )
         }
-        itemInput = ""
+        updateItemInput("")
     }
 
     fun removeItem(item: GroceryListItem) {
-        _uiState.update {
-            it.copy(
-                groceryListItems = it.groceryListItems.filter { it !== item } // todo потом норм будет это просто гуйню тестить
+        _uiState.update { state ->
+            state.copy(
+                groceryListItems = state.groceryListItems.filter { it !== item } // todo потом норм будет это просто гуйню тестить
             )
         }
     }
 
-    fun updateUserItemInput(newItemInput: String) {
-         itemInput = newItemInput
+    fun updateItemInput(newItemInput: String) {
+        itemInput = newItemInput
+        validateItemInput()
     }
 
-    fun clear() {
-        _uiState.update {
-            it.copy(
-                groceryListItems = emptyList(),
-            )
-        }
+    private fun validateItemInput() {
+        itemInputValidate = itemInput.isNotBlank()
     }
+
+//    fun clear() {
+//        _uiState.update {
+//            it.copy(
+//                groceryListItems = emptyList(),
+//            )
+//        }
+//    }
 }
