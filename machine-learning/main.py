@@ -139,7 +139,7 @@ def predictNextBuy(category, days, lastDate, firstDate):
 
 @app.post('/recommendations')
 async def createRecomendationsTask(products: ProductsHistory):
-    rn = random.randint(2 ** 50, 2 ** 63)
+    rn = random.randint(10 ** 9, 10 ** 30)
     category_to_buys = dict()
     min_date = datetime.datetime.now(tz=tz)
     last_date = datetime.datetime(1970, 1, 1, tzinfo=tz)

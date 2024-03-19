@@ -1,0 +1,8 @@
+<resources>
+    <string name="grocery_item_remove_btn">item_remove_btn</string>
+    <string name="grocery_item_bought_btn">item_bought_btn</string>
+    <string name="grocery_item_text_input_insert_btn">item_input_insert_btn</string>
+    <string name="go_to_history_btn">go_to_history_btn</string>
+    <string name="go_back_btn">go_back_btn</string>
+    <string name="add_from_history_btn">add_from_history_btn</string>
+</resources>
