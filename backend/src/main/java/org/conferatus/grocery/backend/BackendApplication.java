@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend;
+package org.conferatus.grocery.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,8 +1,8 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.grocery.backend.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
-import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.grocery.backend.exception.ServerException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

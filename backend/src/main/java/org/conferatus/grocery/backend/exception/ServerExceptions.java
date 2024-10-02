@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.exception;
+package org.conferatus.grocery.backend.exception;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.grocery.backend.control;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
