@@ -39,7 +39,9 @@ async def returnResult(taskId: int, limit: int = 100):
     print(f'taskId is {taskId}')
     print(f'limit is {limit}')
     # res = taskResults[taskId]
-    return taskResults[taskId]
+    print(taskResults[taskId])
+    answer = {"items": list(map(lambda k: {"category": k[0], "nextBuy": (k[1].strftime("%d-%m-%Y"))}, taskResults[taskId].items()))}
+    return answer
     # return \
     #     {
     #         "items": [
@@ -58,7 +60,7 @@ async def returnResult(taskId: int, limit: int = 100):
     #             {
     #                 "category": "Ром",
     #                 "nextBuy": "28-11-2023"
-    #             },
+    #             }
     #         ]
     #     }
 
@@ -158,5 +160,6 @@ async def createRecomendationsTask(products: ProductsHistory):
         dayFromStart = predictNextBuy(category, times, last_day, min_date)
         nextBuy = datetime.timedelta(dayFromStart) + min_date
         answer[category] = nextBuy
+        print(nextBuy)
     taskResults[rn] = answer
     return rn
