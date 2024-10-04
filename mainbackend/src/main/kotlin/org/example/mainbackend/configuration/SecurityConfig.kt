@@ -14,10 +14,10 @@ class SecurityConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/").permitAll()
-                auth.anyRequest().authenticated()
+//                auth.requestMatchers("/").permitAll()
+//                auth.anyRequest().authenticated()
+                auth.anyRequest().permitAll()
             }
-            .oauth2Login(Customizer.withDefaults())
             .formLogin(Customizer.withDefaults())
             .build()
     }

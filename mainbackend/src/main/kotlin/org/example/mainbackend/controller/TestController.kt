@@ -9,9 +9,4 @@ class TestController {
     fun home(): String {
         return "home"
     }
-
-    @GetMapping("/secured")
-    fun secured(): String {
-        return "Secured"
-    }
 }
