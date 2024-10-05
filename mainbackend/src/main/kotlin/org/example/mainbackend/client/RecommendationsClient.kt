@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 
 @Component
-@FeignClient(value = "recommendations", url = "http://localhost:8081/")
+@FeignClient(value = "recommendations")
 interface RecommendationsClient {
     @PostMapping("/recommendations")
     fun createTask(products: Products): Long
