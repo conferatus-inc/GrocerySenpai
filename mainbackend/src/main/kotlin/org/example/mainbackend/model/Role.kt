@@ -1,5 +1,6 @@
 package org.example.mainbackend.model
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -24,6 +25,7 @@ data class Role(
     @GeneratedValue
     val id: Long? = null,
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     val name: RoleName,
     @Transient
     @ManyToMany(mappedBy = "roles")

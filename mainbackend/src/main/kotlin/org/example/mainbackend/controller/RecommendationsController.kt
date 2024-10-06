@@ -1,6 +1,6 @@
 package org.example.mainbackend.controller
 
-import org.example.mainbackend.dto.Recommendation
+import org.example.mainbackend.dto.RecommendationDto
 import org.example.mainbackend.service.RecommendationsService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,7 +20,7 @@ class RecommendationsController(
     @GetMapping("/get_result/{taskId}")
     fun getResult(
         @PathVariable taskId: Long,
-    ): Recommendation {
+    ): RecommendationDto {
         return recommendationsService.getRecommendation(taskId)
     }
 }

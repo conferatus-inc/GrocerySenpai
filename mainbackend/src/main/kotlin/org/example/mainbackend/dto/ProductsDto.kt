@@ -1,12 +1,12 @@
 package org.example.mainbackend.dto
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
-data class Products(
+data class ProductsDto(
     val items: List<Product>,
 )
 
 data class Product(
     val category: String,
-    val boughtOn: LocalDateTime,
+    val boughtOn: OffsetDateTime,
 )
