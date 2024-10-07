@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping
 @FeignClient(value = "recommendations")
 interface RecommendationsClient {
     @PostMapping("/recommendations")
-    fun createTask(products: ProductsDto): Long
+    fun startRecommendationGeneration(products: ProductsDto): Long
 
     @GetMapping("/result/{taskId}")
-    fun getResult(
+    fun getRecommendation(
         @PathVariable("taskId") taskId: Long,
     ): RecommendationDto
 }

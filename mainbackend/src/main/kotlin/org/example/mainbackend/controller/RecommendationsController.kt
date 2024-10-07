@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/recommendations")
+@RequestMapping("/api/v1/recommendations")
 class RecommendationsController(
     private val recommendationsService: RecommendationsService,
 ) {
     @GetMapping("/start")
-    fun doRecommendation(): Long {
-        return recommendationsService.doRecommendation()
+    fun startRecommendationGeneration(): Long {
+        return recommendationsService.startRecommendationGeneration()
     }
 
     @GetMapping("/get_result/{taskId}")
-    fun getResult(
+    fun getRecommendation(
         @PathVariable taskId: Long,
     ): RecommendationDto {
         return recommendationsService.getRecommendation(taskId)

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service
 class RecommendationsService(
     private val recommendationsClient: RecommendationsClient,
 ) {
-    fun doRecommendation(): Long {
-        return recommendationsClient.createTask(products = ProductsDto(listOf()))
+    fun startRecommendationGeneration(): Long {
+        return recommendationsClient.startRecommendationGeneration(products = ProductsDto(listOf()))
     }
 
     fun getRecommendation(taskId: Long): RecommendationDto {
-        return recommendationsClient.getResult(taskId)
+        return recommendationsClient.getRecommendation(taskId)
     }
 }
