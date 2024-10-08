@@ -1,0 +1,1 @@
+openapi-generator-cli generate -i C:\Users\user\IdeaProjects\grocery-senpai\mainbackend\src\main\resources\openapi\openapi.yaml -g kotlin-spring -o C:\Users\user\IdeaProjects\grocery-senpai\mainbackend\generated -c C:\Users\user\IdeaProjects\grocery-senpai\mainbackend\src\main\resources\openapi\config.json

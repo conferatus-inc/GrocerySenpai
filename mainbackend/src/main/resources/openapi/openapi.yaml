@@ -1,0 +1,118 @@
+openapi: "3.0.3"
+
+info:
+  title: "Grocery Senpai API"
+  description: "Grocery Senpai API"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080/api/v1"
+paths:
+  /recommendations:
+    get:
+      operationId: "startRecommendationGeneration"
+      description: "Начать генерацию рекомендаций"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskId"
+      tags:
+        - recommendations
+  /recommendations/{taskId}:
+    get:
+      operationId: "getRecommendations"
+      description: "Получить результат генерации рекомендаций"
+      parameters:
+        - name: "taskId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recommendations"
+      tags:
+        - recommendations
+  /products:
+    get:
+      operationId: "getProducts"
+      description: "Получить все покупки пользователя"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+      tags:
+        - products
+    post:
+      operationId: "addProduct"
+      description: "Добавить покупку пользователя"
+      parameters:
+        - name: "purchase"
+          in: "query"
+          required: true
+          schema:
+            $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+      tags:
+        - products
+
+
+
+components:
+  schemas:
+    TaskId:
+      description: "ID рекомендации"
+      type: integer
+      format: int64
+
+    Recommendations:
+      type: array
+      description: "Список рекомендаций"
+      items:
+        $ref: "#/components/schemas/Recommendation"
+
+    Recommendation:
+      description: "Рекомендация"
+      type: object
+      properties:
+        category:
+          description: "Категория"
+          type: string
+        nextBuy:
+          description: "Дата-время следующей покупки этой категории"
+          type: string
+          format: date-time
+
+    Products:
+      description: "Список покупок пользователя"
+      type: array
+      items:
+        $ref: "#/components/schemas/Product"
+
+    Product:
+      description: "Покупка"
+      type: object
+      properties:
+        category:
+          type: string
+          description: "Категория"
+        boughtOn:
+          type: string
+          format: date-time
+          description: "Дата-время покупки по этой категории"

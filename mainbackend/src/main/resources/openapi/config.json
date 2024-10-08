@@ -1,0 +1,9 @@
+{
+  "interfaceOnly": true,
+  "apiSuffix": "",
+  "useTags": true,
+  "basePackage": "org.example.mainbackend.gen",
+  "apiPackage": "org.example.mainbackend.gen.controller",
+  "configPackage": "org.example.mainbackend.gen.configuration",
+  "modelPackage": "org.example.mainbackend.gen.model"
+}
