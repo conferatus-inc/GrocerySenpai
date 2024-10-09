@@ -2,11 +2,11 @@ package org.example.mainbackend.dto
 
 import java.time.LocalDateTime
 
-data class RecommendationDto(
-    val items: List<SingleRecommendation>,
+data class RecommendationsDto(
+    val items: List<RecommendationDto>,
 )
 
-data class SingleRecommendation(
+data class RecommendationDto(
     val category: String,
     val nextBuy: LocalDateTime,
 )

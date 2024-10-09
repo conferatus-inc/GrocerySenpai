@@ -2,7 +2,7 @@ package org.example.mainbackend.service
 
 import org.example.mainbackend.client.RecommendationsClient
 import org.example.mainbackend.dto.ProductsDto
-import org.example.mainbackend.dto.RecommendationDto
+import org.example.mainbackend.dto.RecommendationsDto
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,7 +13,7 @@ class RecommendationsService(
         return recommendationsClient.startRecommendationGeneration(products = ProductsDto(listOf()))
     }
 
-    fun getRecommendation(taskId: Long): RecommendationDto {
+    fun getRecommendation(taskId: Long): RecommendationsDto {
         return recommendationsClient.getRecommendation(taskId)
     }
 }
