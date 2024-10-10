@@ -12,7 +12,7 @@ group = 'org.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '21'
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 repositories {
@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -49,8 +50,8 @@ tasks.withType(KotlinCompile) {
         freeCompilerArgs += '-Xjsr305=strict'
         jvmTarget = '21'
     }
-}
 
+}
 tasks.named('test') {
     useJUnitPlatform()
 }
