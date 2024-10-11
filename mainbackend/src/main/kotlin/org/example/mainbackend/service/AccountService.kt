@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.example.mainbackend.exception.ServerExceptions
 import org.example.mainbackend.model.Role
 import org.example.mainbackend.model.User
+import org.example.mainbackend.model.enums.RoleName
 import org.example.mainbackend.repository.RoleRepository
 import org.example.mainbackend.repository.UserRepository
 import org.springframework.http.HttpStatus
@@ -15,10 +16,11 @@ import kotlin.collections.HashSet
 
 @Service
 @Transactional
-class AccountService (private val userRepository: UserRepository,
-                      private val roleRepository: RoleRepository,
-                      private val encoder: PasswordEncoder){
-
+class AccountService(
+    private val userRepository: UserRepository,
+    private val roleRepository: RoleRepository,
+    private val encoder: PasswordEncoder,
+) {
     private val authURLs: MutableSet<String> = HashSet()
 //    private val yandexIdService: YandexIdService? = null
     fun needAuthorisation(url: String): Boolean {
@@ -42,12 +44,16 @@ class AccountService (private val userRepository: UserRepository,
     //
     //        return createAppUser(id.toString(), id.toString(), roles.stream().map(Role::getName).collect(Collectors.toSet()));
     //    }
-    fun createAppUser(userName: String, password: String, roles2: Set<String>?): User {
+    fun createAppUser(
+        userName: String,
+        password: String,
+        roles2: Set<String>?,
+    ): User {
         var roles = roles2
         if (roles == null) {
             roles = HashSet()
         }
-        //Roles.greaterPermission(roles);
+        // Roles.greaterPermission(roles);
         checkPassword(password)
         checkUserName(userName)
         userRepository.findByName(userName)?.let {
@@ -55,19 +61,19 @@ class AccountService (private val userRepository: UserRepository,
         }
 
         val notExists: MutableList<String> = ArrayList()
-        val exists: Set<Role> = HashSet<Role>()
+        val exists: MutableSet<Role> = mutableSetOf()
         for (role in roles) {
-            val foundedRole: Unit = roleRepository.findByName(role)
-            foundedRole.ifPresent(exists::add)
-            if (foundedRole.isEmpty()) {
+            val foundedRole = roleRepository.findByName(RoleName.valueOf(role))
+            if (foundedRole != null) {
+                exists.add(foundedRole)
+            } else {
                 notExists.add(role)
             }
-        }
-        if (!notExists.isEmpty()) {
+        if (notExists.isNotEmpty()) {
             log.error("for {}: Roles not exists {}", userName, notExists)
-            TypicalServerExceptions.ROLE_NOT_EXISTS.moreInfo("Roles not exists: $notExists").throwException()
+            ServerExceptions.ROLE_NOT_EXISTS.moreInfo("Roles not exists: $notExists").throwException()
         }
-        val newUser = AppUser()
+        val newUser = User()
         newUser.setRoles(exists)
         newUser.setUsername(userName)
         val savedPassword = encoder!!.encode(password)
@@ -79,8 +85,10 @@ class AccountService (private val userRepository: UserRepository,
         return userRepository.save(newUser)
     }
 
-    @Throws(ResponseException::class)
-    fun addRoleToUser(userName: String, roleName: String): AppUser {
+    fun addRoleToUser(
+        userName: String,
+        roleName: String,
+    ): User {
         log.info("Start adding role {} to user {}", roleName, userName)
         val user: Optional<AppUser> = findUser(userName)
         if (user.isEmpty()) {
@@ -100,7 +108,11 @@ class AccountService (private val userRepository: UserRepository,
     }
 
     @Transactional
-    fun addRoleToUser(id: Long, addRole: String?, removeRole: String?): AppUser {
+    fun addRoleToUser(
+        id: Long,
+        addRole: String?,
+        removeRole: String?,
+    ): AppUser {
         val userO = userRepository!!.findById(id)
         if (userO.isEmpty) {
             USER_NOT_FOUND.throwException()
@@ -125,7 +137,10 @@ class AccountService (private val userRepository: UserRepository,
         throw RuntimeException("WTF?!")
     }
 
-    fun loginWithPassword(userName: String?, password: String?): AppUser? {
+    fun loginWithPassword(
+        userName: String?,
+        password: String?,
+    ): AppUser? {
         val appUserOptional: Optional<AppUser> = findUser(userName)
         if (appUserOptional.isEmpty()) {
             USER_NOT_FOUND.throwException()
@@ -148,7 +163,10 @@ class AccountService (private val userRepository: UserRepository,
         return UserLoginDTO(response, userO.get())
     }
 
-    fun login(token: String, role: String?): UserLoginDTO {
+    fun login(
+        token: String,
+        role: String?,
+    ): UserLoginDTO {
         log.info("starting logging with token:{} and role {}", token.substring(0, 20), role)
         val response: YandexIdService.ResponseYandexId = yandexIdService.getId(yandexIdService.parseToken(token))
         val id: String = response.id()
@@ -250,7 +268,10 @@ class AccountService (private val userRepository: UserRepository,
     }
 
     @Throws(ResponseException::class)
-    fun changePassword(username: String?, newPassword: String?): AppUser {
+    fun changePassword(
+        username: String?,
+        newPassword: String?,
+    ): AppUser {
         val user: AppUser = getUser(username)
         Roles.greaterPermission(user.getRoles())
         checkPassword(newPassword)
@@ -259,7 +280,10 @@ class AccountService (private val userRepository: UserRepository,
     }
 
     @Transactional
-    fun updateRefreshToken(username: String?, refreshToken: String?) {
+    fun updateRefreshToken(
+        username: String?,
+        refreshToken: String?,
+    ) {
         val user: AppUser = getUser(username)
         user.setRefresh_token(refreshToken)
         log.info("refresh token {}", refreshToken)
@@ -267,7 +291,10 @@ class AccountService (private val userRepository: UserRepository,
     }
 
     @Transactional
-    fun updateAccessToken(username: String?, accessToken: String?) {
+    fun updateAccessToken(
+        username: String?,
+        accessToken: String?,
+    ) {
         val user: AppUser = getUser(username)
         user.setAccess_token(accessToken)
         log.info("access token {}", accessToken)
@@ -312,22 +339,27 @@ class AccountService (private val userRepository: UserRepository,
         appUser.setUsername()
         appUser.setNickname(requestUser.nickname())
         appUser.setPassword(encoder!!.encode(requestUser.username() + "password"))
-        appUser.setRoles(requestUser.roles()
-            .stream()
-            .map(roleRepository::findByName)
-            .map{
-                if (it) {
-                    return@map null
-                } else {
-                    return@map it.get()
+        appUser.setRoles(
+            requestUser.roles()
+                .stream()
+                .map(roleRepository::findByName)
+                .map {
+                    if (it) {
+                        return@map null
+                    } else {
+                        return@map it.get()
+                    }
                 }
-            }
-            .filter { obj: Any? -> Objects.nonNull(obj) }
-            .collect(Collectors.toSet()))
+                .filter { obj: Any? -> Objects.nonNull(obj) }
+                .collect(Collectors.toSet()),
+        )
         return userRepository!!.save(appUser)
     }
 
-    fun addPictureToUser(id: Long?, pictureBase64: String?): AppUser {
+    fun addPictureToUser(
+        id: Long?,
+        pictureBase64: String?,
+    ): AppUser {
         val userO: Unit = userRepository.findAppUserById(id)
         if (userO.isEmpty()) {
             USER_NOT_FOUND.throwException()
@@ -337,7 +369,7 @@ class AccountService (private val userRepository: UserRepository,
     }
 
     companion object {
-        //todo: add email checking
+        // todo: add email checking
         fun checkUserName(username: String?) {
             if (username == null || username.isBlank()) {
                 log.warn("Null or empty username")
@@ -347,7 +379,7 @@ class AccountService (private val userRepository: UserRepository,
                 log.warn("Bad username {}", username)
                 BAD_LOGIN.moreInfo(
                     "Bad username. Username must contains" +
-                            "only digits letters"
+                        "only digits letters",
                 ).throwException()
             }
         }
@@ -360,7 +392,7 @@ class AccountService (private val userRepository: UserRepository,
             if (!password!!.matches("(\\S)+".toRegex())) {
                 BAD_PASSWORD.moreInfo(
                     "Password must contains" +
-                            "only digits letters and signs"
+                        "only digits letters and signs",
                 ).throwException()
             }
         }

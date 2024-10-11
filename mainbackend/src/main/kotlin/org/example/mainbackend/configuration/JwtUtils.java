@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.example.mainbackend.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.yandex.shbr.ost.backend.security.appUser.AccountService;
 
 import java.util.Date;
 import java.util.stream.Collectors;
