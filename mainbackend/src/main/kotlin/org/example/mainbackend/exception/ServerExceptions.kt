@@ -13,6 +13,7 @@ enum class ServerExceptions {
     BAD_REQUEST(ServerException(HttpStatus.BAD_REQUEST)),
     NO_ACCESS_TOKEN(ServerException(HttpStatus.UNAUTHORIZED, "NO_ACCESS_TOKEN")),
     ACCESS_TOKEN_PROBLEM(ServerException(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_PROBLEM")),
+    USER_ALREADY_EXISTS(ServerException(HttpStatus.BAD_REQUEST, "USER_ALREADY_EXISTS")),
     ;
 
     private val serverException: ServerException
