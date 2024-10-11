@@ -25,13 +25,13 @@ enum class ServerExceptions {
         this.serverException = serverException
     }
 
-    fun message(message: String?): ServerExceptions {
-        serverException.code = message!!
+    fun message(message: String): ServerExceptions {
+        serverException.code = message
         return this
     }
 
-    fun moreInfo(moreInfo: String?): ServerExceptions {
-        serverException.message = moreInfo!!
+    fun moreInfo(moreInfo: String): ServerExceptions {
+        serverException.message = moreInfo
         return this
     }
 
