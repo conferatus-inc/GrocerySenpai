@@ -3,6 +3,5 @@ package inc.conferatus.grocerysenpai.presentation.shoppinglist
 import inc.conferatus.grocerysenpai.data.GroceryListItem
 
 data class GroceryListUiState(
-    val groceryListItems: List<GroceryListItem> = emptyList(),
-    val counter : Int = 1
+    val groceryListItems: List<GroceryListItem> = emptyList()
 )
