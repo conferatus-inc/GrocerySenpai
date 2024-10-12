@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import inc.conferatus.grocerysenpai.presentation.shoppinglist.ShoppingListScreen
+import inc.conferatus.grocerysenpai.presentation.shoppinglist.GroceryListScreen
+import inc.conferatus.grocerysenpai.presentation.shoppinglist.GroceryListViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var viewModel = GroceryListViewModel()
         setContent {
             GrocerySenpaiTheme {
                 // A surface container using the 'background' color from the theme
@@ -20,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ShoppingListScreen()
+                    GroceryListScreen(viewModel)
                 }
             }
         }
