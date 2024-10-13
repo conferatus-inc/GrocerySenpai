@@ -20,13 +20,21 @@ class GroceryListViewModel : ViewModel() {
     var itemInput by mutableStateOf("")
         private set
 
-    fun addRandomNote() {
+    fun addItem() {
         _uiState.update {
             it.copy(
                 groceryListItems = it.groceryListItems.plus(GroceryListItem(name = itemInput))
             )
         }
         itemInput = ""
+    }
+
+    fun removeItem(item: GroceryListItem) {
+        _uiState.update {
+            it.copy(
+                groceryListItems = it.groceryListItems.filter { it !== item } // todo потом норм будет это просто гуйню тестить
+            )
+        }
     }
 
     fun updateUserItemInput(newItemInput: String) {
