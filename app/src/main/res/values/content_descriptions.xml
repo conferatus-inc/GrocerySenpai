@@ -1,0 +1,4 @@
+<resources>
+    <string name="grocery_item_remove_btn">item_remove_btn</string>
+    <string name="grocery_item_text_input_insert_btn">item_input_insert_btn</string>
+</resources>
