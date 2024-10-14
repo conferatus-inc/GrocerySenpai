@@ -29,8 +29,8 @@ fun MainItemTextInputComponent(
     onValueChange: (String) -> Unit,
     isError: Boolean,
     modifier: Modifier = Modifier,
-    horizontalPadding : Dp = 10.dp,
-    verticalPadding : Dp = 10.dp,
+    horizontalPadding : Dp = 12.dp,
+    verticalPadding : Dp = 12.dp,
 ) {
     OutlinedTextField(
         isError = isError,
@@ -46,7 +46,7 @@ fun MainItemTextInputComponent(
         keyboardActions = KeyboardActions(
             onDone = { if (!isError) onInsertClick() }
         ),
-        shape = MaterialTheme.shapes.small,
+        shape = MaterialTheme.shapes.medium,
         label = {
             Text(
                 text = stringResource(R.string.grocery_item_text_input_label)

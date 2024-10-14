@@ -14,8 +14,8 @@ import inc.conferatus.grocerysenpai.R
 @Composable
 fun MainNoItemsTextComponent(
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = 10.dp,
-    verticalPadding: Dp = 10.dp
+    horizontalPadding: Dp = 12.dp,
+    verticalPadding: Dp = 12.dp
 ) {
     Text(
         text = stringResource(R.string.grocery_no_items_text),
