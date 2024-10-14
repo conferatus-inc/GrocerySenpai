@@ -2,4 +2,5 @@
     <string name="app_name">GrocerySenpai</string>
     <string name="grocery_item_text_input_label">Insert new grocery</string>
     <string name="grocery_no_items_text">Try typing something like \"shawerma\" or \"пиво жигулевское, 3шт. полторашки\"</string>
+    <string name="grocery_list_item_amount_postfix_default">pcs</string>
 </resources>

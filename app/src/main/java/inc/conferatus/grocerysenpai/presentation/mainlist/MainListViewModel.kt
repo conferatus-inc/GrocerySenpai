@@ -1,10 +1,10 @@
-package inc.conferatus.grocerysenpai.presentation.grocerylist
+package inc.conferatus.grocerysenpai.presentation.mainlist
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import inc.conferatus.grocerysenpai.data.GroceryListItem
+import inc.conferatus.grocerysenpai.model.GroceryItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.update
 //
 //): ViewModel() {
 // todo часть логики отсюда будет в модели
-class GroceryListViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(GroceryListUiState())
+class MainListViewModel : ViewModel() {
+    private val _uiState = MutableStateFlow(MainListUiState())
     val uiState = _uiState.asStateFlow()
 
     var itemInput by mutableStateOf("")
@@ -31,16 +31,16 @@ class GroceryListViewModel : ViewModel() {
     fun addItem() {
         _uiState.update {
             it.copy(
-                groceryListItems = it.groceryListItems.plus(GroceryListItem(name = itemInput))
+                groceryItems = it.groceryItems.plus(GroceryItem(name = itemInput))
             )
         }
         updateItemInput("")
     }
 
-    fun removeItem(item: GroceryListItem) {
+    fun removeItem(item: GroceryItem) {
         _uiState.update { state ->
             state.copy(
-                groceryListItems = state.groceryListItems.filter { it !== item } // todo потом норм будет это просто гуйню тестить
+                groceryItems = state.groceryItems.filter { it !== item } // todo потом норм будет это просто гуйню тестить
             )
         }
     }
