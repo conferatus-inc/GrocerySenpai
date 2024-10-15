@@ -10,6 +10,8 @@ interface CategoryRepository {
 
     fun getCategoryStream(id: Int): Flow<CategoryItem?>
 
+    fun getCategoryStreamByName(name: String): Flow<CategoryItem?>
+
     suspend fun insertCategory(category: CategoryItem)
 
     @Delete

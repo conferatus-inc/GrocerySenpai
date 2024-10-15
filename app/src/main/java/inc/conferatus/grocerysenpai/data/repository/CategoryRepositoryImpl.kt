@@ -19,6 +19,10 @@ class CategoryRepositoryImpl(
         return dao.getCategoryById(id).map { item -> item?.let { categoryEntityToItem(it) } }
     }
 
+    override fun getCategoryStreamByName(name: String): Flow<CategoryItem?> {
+        return dao.getCaterogyByName(name).map { item -> item?.let { categoryEntityToItem(it) } }
+    }
+
     override suspend fun insertCategory(category: CategoryItem) {
         dao.insertCategory(categoryItemToEntity(category))
     }

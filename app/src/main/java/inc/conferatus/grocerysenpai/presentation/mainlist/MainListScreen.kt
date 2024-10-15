@@ -95,6 +95,7 @@ fun MainListScreen(
             Modifier
                 .fillMaxHeight()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
             items(currentGroceries) {
                 MainListEntryComponent(

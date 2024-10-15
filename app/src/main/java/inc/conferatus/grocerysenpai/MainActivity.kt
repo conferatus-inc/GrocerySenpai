@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import dagger.hilt.android.AndroidEntryPoint
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val viewModel = MainListViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {

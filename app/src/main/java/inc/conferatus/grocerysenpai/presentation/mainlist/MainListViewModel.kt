@@ -4,17 +4,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
+import inc.conferatus.grocerysenpai.model.repository.CategoryRepository
+import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.Date
 
 //@HiltViewModel
 //class GroceryListViewModel @Inject constructor(
 //
 //): ViewModel() {
 // todo часть логики отсюда будет в модели
-class MainListViewModel : ViewModel() {
+class MainListViewModel @Inject(
+    private val groceryRepository: GroceryRepository,
+    private val categoryRepository: CategoryRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(MainListUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -26,21 +37,54 @@ class MainListViewModel : ViewModel() {
 
     init {
         validateItemInput()
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    groceryItems = groceryRepository.getAllGroceriesStream().first()
+                )
+            }
+
+            val category = categoryRepository.getCategoryStreamByName("Beer").first()
+            if (category == null) {
+                categoryRepository.insertCategory(CategoryItem(name = "Beer"))
+            }
+        }
+
     }
 
     fun addItem() {
-        _uiState.update {
-            it.copy(
-                groceryItems = it.groceryItems.plus(GroceryItem(name = itemInput))
+        viewModelScope.launch {
+            val category = categoryRepository.getCategoryStreamByName("Beer").first()
+            assert(category != null)
+
+            val newItem = GroceryItem(
+                category = category!!,
+                description = "description is here",
+                amount = 2,
+                amountPostfix = "kg",
+                bought = null
             )
+
+            _uiState.update {
+                it.copy(
+                    groceryItems = it.groceryItems.plus(newItem)
+                )
+            }
+
+            groceryRepository.insertGrocery(newItem)
         }
+
         updateItemInput("")
     }
 
     fun removeItem(item: GroceryItem) {
+        viewModelScope.launch {
+            groceryRepository.updateGroceryBoughtDate(item, Date.from(Instant.now()))
+        }
         _uiState.update { state ->
             state.copy(
-                groceryItems = state.groceryItems.filter { it !== item } // todo потом норм будет это просто гуйню тестить
+                groceryItems = state.groceryItems.filter { it !== item }
             )
         }
     }

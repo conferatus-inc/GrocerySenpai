@@ -4,9 +4,7 @@ import inc.conferatus.grocerysenpai.data.dao.GroceryDao
 import inc.conferatus.grocerysenpai.data.entity.GroceryEntity
 import inc.conferatus.grocerysenpai.data.repository.CategoryRepositoryImpl.Companion.categoryEntityToItem
 import inc.conferatus.grocerysenpai.data.repository.CategoryRepositoryImpl.Companion.categoryItemToEntity
-import inc.conferatus.grocerysenpai.model.items.CurrentGroceryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
-import inc.conferatus.grocerysenpai.model.items.HistoryGroceryItem
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,90 +17,54 @@ class GroceryRepositoryImpl(
         return dao.getGroceries().map { list -> list.map { groceryEntityToItem(it) } }
     }
 
-    override fun getHistoryGroceriesStream(): Flow<List<HistoryGroceryItem>> {
-        return dao.getHistoryGroceries().map { list -> list.map { groceryEntityToHistoryItem(it) } }
+    override fun getHistoryGroceriesStream(): Flow<List<GroceryItem>> {
+        return dao.getHistoryGroceries().map { list -> list.map { groceryEntityToItem(it) } }
     }
 
-    override fun getCurrentGroceriesStream(): Flow<List<CurrentGroceryItem>> {
-        return dao.getCurrentGroceries().map { list -> list.map { groceryEntityToCurrentItem(it) } }
+    override fun getCurrentGroceriesStream(): Flow<List<GroceryItem>> {
+        return dao.getCurrentGroceries().map { list -> list.map { groceryEntityToItem(it) } }
     }
 
     override fun getGroceryStream(id: Int): Flow<GroceryItem?> {
-        TODO("Not yet implemented")
+        return dao.getGroceryById(id).map { item -> item?.let { groceryEntityToItem(it) } }
     }
 
-    override suspend fun deleteGrocery(grocery: GroceryItem) {
-        TODO("Not yet implemented")
+    override suspend fun deleteGrocery(item: GroceryItem) {
+        dao.deleteGrocery(groceryItemToEntity(item))
     }
 
-    override suspend fun insertGrocery(grocery: GroceryItem) {
-        TODO("Not yet implemented")
+    override suspend fun insertGrocery(item: GroceryItem) {
+        dao.insertGrocery(groceryItemToEntity(item))
     }
 
-    override suspend fun updateGroceryTimestamp(grocery: GroceryItem, date: Date) {
-        TODO("Not yet implemented")
+    override suspend fun updateGrocery(item: GroceryItem) {
+        dao.updateGrocery(groceryItemToEntity(item))
     }
 
-    // TODO TODOOOOOOOOOOOOOOOOOOOOOOOOOO НИЖЕ НАСРАНО!!!!!!!!!!1
+    override suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: Date?) {
+        dao.updateGrocery(groceryItemToEntity(item.copy(bought = bought)))
+    }
+
     companion object {
         fun groceryEntityToItem(entity: GroceryEntity): GroceryItem {
-            if (entity.bought != null) {
-                return groceryEntityToHistoryItem(entity)
-            } else {
-                return groceryEntityToCurrentItem(entity)
-            }
-        }
-
-        fun groceryItemToEntity(item: GroceryItem): GroceryEntity {
-            return when (item) {
-                is HistoryGroceryItem -> historyItemToGroceryEntity(item)
-                is CurrentGroceryItem -> currentItemToGroceryEntity(item)
-            }
-        }
-        private fun groceryEntityToHistoryItem(entity: GroceryEntity): HistoryGroceryItem {
-            assert(entity.bought != null)
-
-            return HistoryGroceryItem(
+            return GroceryItem(
                 id = entity.id,
                 category = categoryEntityToItem(entity.category),
                 description = entity.description,
                 amount = entity.amount,
                 amountPostfix = entity.amountPostfix,
-                bought = entity.bought!!
+                bought = entity.bought
             )
         }
 
-        private fun groceryEntityToCurrentItem(entity: GroceryEntity): CurrentGroceryItem {
-            assert(entity.bought == null)
-
-            return CurrentGroceryItem(
-                id = entity.id,
-                category = categoryEntityToItem(entity.category),
-                description = entity.description,
-                amount = entity.amount,
-                amountPostfix = entity.amountPostfix
-            )
-        }
-
-        private fun historyItemToGroceryEntity(item: HistoryGroceryItem): GroceryEntity {
+        fun groceryItemToEntity(item: GroceryItem): GroceryEntity {
             return GroceryEntity(
                 id = item.id,
                 category = categoryItemToEntity(item.category),
+                description = item.description,
                 amount = item.amount,
                 amountPostfix = item.amountPostfix,
-                description = item.description,
                 bought = item.bought
-            )
-        }
-
-        private fun currentItemToGroceryEntity(item: CurrentGroceryItem): GroceryEntity {
-            return GroceryEntity(
-                id = item.id,
-                category = categoryItemToEntity(item.category),
-                amount = item.amount,
-                amountPostfix = item.amountPostfix,
-                description = item.description,
-                bought = null
             )
         }
     }

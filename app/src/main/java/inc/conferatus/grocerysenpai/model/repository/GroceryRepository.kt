@@ -1,28 +1,22 @@
 package inc.conferatus.grocerysenpai.model.repository
 
-import androidx.room.Delete
-import inc.conferatus.grocerysenpai.data.entity.CategoryEntity
-import inc.conferatus.grocerysenpai.data.entity.GroceryEntity
-import inc.conferatus.grocerysenpai.model.items.CategoryItem
-import inc.conferatus.grocerysenpai.model.items.CurrentGroceryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
-import inc.conferatus.grocerysenpai.model.items.HistoryGroceryItem
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 interface GroceryRepository {
     fun getAllGroceriesStream(): Flow<List<GroceryItem>>
 
-    fun getHistoryGroceriesStream(): Flow<List<HistoryGroceryItem>>
-    fun getCurrentGroceriesStream(): Flow<List<CurrentGroceryItem>>
+    fun getHistoryGroceriesStream(): Flow<List<GroceryItem>>
+    fun getCurrentGroceriesStream(): Flow<List<GroceryItem>>
 
     fun getGroceryStream(id: Int): Flow<GroceryItem?>
 
-    suspend fun deleteGrocery(grocery: GroceryItem)
+    suspend fun deleteGrocery(item: GroceryItem)
 
-    suspend fun insertGrocery(grocery: GroceryItem)
+    suspend fun insertGrocery(item: GroceryItem)
 
-    suspend fun updateGroceryTimestamp(grocery: GroceryItem, date: Date)
+    suspend fun updateGrocery(item: GroceryItem)
 
-    suspend fun currentGroceryToHistory(grocery: CurrentGroceryItem)
+    suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: Date?) // по моему это логичнее в бизнесе сделать
 }
