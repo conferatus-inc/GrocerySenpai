@@ -16,7 +16,7 @@ interface GroceryDao {
     fun getGroceries(): Flow<List<GroceryEntity>>
 
     @Query("select * from groceries where id = :id")
-    fun getGroceryById(id: Int): GroceryEntity // todo not needed?
+    fun getGroceryById(id: Int): Flow<GroceryEntity?> // todo not needed?
 
     @Query("select * from groceries where bought is null")
     fun getCurrentGroceries(): Flow<List<GroceryEntity>> // todo rename?
