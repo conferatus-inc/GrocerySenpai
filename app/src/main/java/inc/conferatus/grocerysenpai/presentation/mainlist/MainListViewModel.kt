@@ -16,13 +16,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.Date
+import javax.inject.Inject
 
 //@HiltViewModel
 //class GroceryListViewModel @Inject constructor(
 //
 //): ViewModel() {
 // todo часть логики отсюда будет в модели
-class MainListViewModel @Inject(
+class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
@@ -47,7 +48,7 @@ class MainListViewModel @Inject(
 
             val category = categoryRepository.getCategoryStreamByName("Beer").first()
             if (category == null) {
-                categoryRepository.insertCategory(CategoryItem(name = "Beer"))
+                categoryRepository.insertCategory(CategoryItem(name = "Beer")) // сделать адекватно препопулате
             }
         }
 

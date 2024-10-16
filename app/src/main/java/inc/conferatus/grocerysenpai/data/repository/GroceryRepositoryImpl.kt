@@ -13,7 +13,7 @@ import java.util.Date
 class GroceryRepositoryImpl(
     private val dao: GroceryDao
 ) : GroceryRepository {
-    override fun getAllGroceriesStream(): Flow<List<GroceryItem>> {
+    override fun getAllGroceriesStream(): Flow<List<GroceryItem>> { //todo GroceryAndCategory
         return dao.getGroceries().map { list -> list.map { groceryEntityToItem(it) } }
     }
 
@@ -60,7 +60,7 @@ class GroceryRepositoryImpl(
         fun groceryItemToEntity(item: GroceryItem): GroceryEntity {
             return GroceryEntity(
                 id = item.id,
-                category = categoryItemToEntity(item.category),
+                categoryId = item.category.id,
                 description = item.description,
                 amount = item.amount,
                 amountPostfix = item.amountPostfix,

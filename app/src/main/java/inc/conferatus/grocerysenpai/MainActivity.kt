@@ -11,10 +11,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val viewModel = MainListViewModel()
+    @Inject
+    lateinit var viewModel: MainListViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
