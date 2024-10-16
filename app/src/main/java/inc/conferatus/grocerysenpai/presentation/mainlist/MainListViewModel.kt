@@ -19,9 +19,6 @@ import java.util.Date
 import javax.inject.Inject
 
 //@HiltViewModel
-//class GroceryListViewModel @Inject constructor(
-//
-//): ViewModel() {
 // todo часть логики отсюда будет в модели
 class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
@@ -33,14 +30,14 @@ class MainListViewModel @Inject constructor(
     var itemInput by mutableStateOf("")
         private set
 
-    var itemInputValidate by mutableStateOf(false)
+    var isInputValidated by mutableStateOf(false)
         private set
 
     init {
-        validateItemInput()
+        tryValidateItemInput()
 
         viewModelScope.launch {
-            _uiState.update {
+            _uiState.update { // todo хрень
                 it.copy(
                     groceryItems = groceryRepository.getAllGroceriesStream().first()
                 )
@@ -61,7 +58,7 @@ class MainListViewModel @Inject constructor(
 
             val newItem = GroceryItem(
                 category = category!!,
-                description = "description is here",
+                description = itemInput,
                 amount = 2,
                 amountPostfix = "kg",
                 bought = null
@@ -92,11 +89,11 @@ class MainListViewModel @Inject constructor(
 
     fun updateItemInput(newItemInput: String) {
         itemInput = newItemInput
-        validateItemInput()
+        tryValidateItemInput()
     }
 
-    private fun validateItemInput() {
-        itemInputValidate = itemInput.isNotBlank()
+    private fun tryValidateItemInput() {
+        isInputValidated = itemInput.isNotBlank()
     }
 
 //    fun clear() {

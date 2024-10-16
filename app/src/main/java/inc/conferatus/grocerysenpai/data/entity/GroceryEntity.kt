@@ -18,10 +18,10 @@ data class GroceryEntity (
 )
 
 data class GroceryAndCategory(
-    @Embedded val categoryEntity: CategoryEntity,
+    @Embedded val groceryEntity: GroceryEntity,
     @Relation(
-        parentColumn = "userId",
-        entityColumn = "categoryId"
+        parentColumn = "categoryId",
+        entityColumn = "id"
     )
-    val groceryEntity: GroceryEntity
+    val categoryEntity: CategoryEntity
 )
