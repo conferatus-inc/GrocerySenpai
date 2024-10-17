@@ -24,24 +24,22 @@ fun MainItemEntryComponent(
         secondaryText = secondaryText,
         amountText = amountText,
         modifier = modifier,
-        rightSideComponents = listOf(
-            {
-                TextButton(
-                    onClick = onRemoveButton,
-                    modifier = modifier,
-                    shape = CircleShape
-                ) {
-                    Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
-                };
-
-                TextButton(
-                    onClick = onRemoveButton,
-                    modifier = modifier,
-                    shape = CircleShape
-                ) {
-                    Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
-                }
+        rightSideComponents = listOf {
+            TextButton(
+                onClick = onRemoveButton,
+                modifier = modifier,
+                shape = CircleShape
+            ) {
+                Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
             }
-        )
+
+            TextButton(
+                onClick = onRemoveButton,
+                modifier = modifier,
+                shape = CircleShape
+            ) {
+                Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
+            }
+        }
     )
 }
