@@ -3,7 +3,9 @@ package inc.conferatus.grocerysenpai.model.repository
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
+import javax.inject.Singleton
 
+@Singleton
 interface GroceryRepository {
     fun getAllGroceriesStream(): Flow<List<GroceryItem>>
 

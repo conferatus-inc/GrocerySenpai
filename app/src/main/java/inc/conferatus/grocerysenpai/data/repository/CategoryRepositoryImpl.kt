@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.map
 class CategoryRepositoryImpl(
     private val dao : CategoryDao
 ) : CategoryRepository {
-    override fun getAllCategoriesStream(): Flow<List<CategoryItem>> {
-        return dao.getCategories().map { list -> list.map { categoryEntityToItem(it) } }
+    override fun getAllCategoriesStream(): List<CategoryItem> {
+        return dao.getCategories().map {  categoryEntityToItem(it)  }
     }
 
     override fun getCategoryStream(id: Int): Flow<CategoryItem?> {

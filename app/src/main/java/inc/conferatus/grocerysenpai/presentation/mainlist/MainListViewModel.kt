@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import inc.conferatus.grocerysenpai.model.CategoriesListSingletone
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.model.repository.CategoryRepository
@@ -22,7 +23,8 @@ import javax.inject.Inject
 // todo часть логики отсюда будет в модели
 class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    /*private*/ val categoriesListSingletone: CategoriesListSingletone
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainListUiState())
     val uiState = _uiState.asStateFlow()

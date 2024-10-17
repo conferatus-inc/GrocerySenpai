@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
     @Query("select * from categories")
-    fun getCategories(): Flow<List<CategoryEntity>>
+    fun getCategories(): List<CategoryEntity>
 
     @Query("select * from categories where id = :id")
     fun getCategoryById(id: Int): Flow<CategoryEntity?> // todo not needed?

@@ -23,7 +23,7 @@ object AppModule {
             app,
             GroceryDatabase::class.java,
             GroceryDatabase.DATABASE_NAME
-        ).build()
+        ).allowMainThreadQueries().build()
     }
 
     @Provides
