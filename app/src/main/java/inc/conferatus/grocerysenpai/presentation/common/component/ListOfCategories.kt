@@ -27,7 +27,7 @@ fun getRandomColor(): Color {
 
 @Preview
 @Composable
-fun PreviewListOfCategories() {
+fun ListOfCategories() {
     val categories = listOf(
         // TODO: take categories from DB
         CategoryItem(0, "Шавуха"),
