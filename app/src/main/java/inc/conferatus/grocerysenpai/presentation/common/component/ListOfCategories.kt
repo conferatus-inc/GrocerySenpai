@@ -1,5 +1,9 @@
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,60 +12,61 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
-import inc.conferatus.grocerysenpai.presentation.common.component.FlowRow
 
-fun getRandomColor(): Color {
-    return listOf(
-        Color(0xFFB35707),
-        Color(0xFF8F0450),
-        Color(0xFF0B7510),
-        Color(0xFFB12626),
-        Color(0xFF11977C),
-        Color(0xFF092B8D),
-    ).random()
-}
-
-@Preview
+@OptIn(ExperimentalLayoutApi::class)
+//@Preview
 @Composable
-fun ListOfCategories() {
-    val categories = listOf(
-        // TODO: take categories from DB
-        CategoryItem(0, "Шавуха"),
+fun ListOfCategories(userInput: String) {
+    val categories = mutableListOf(
+        // TODO: take from DB
         CategoryItem(1, "Хлеб"),
-        CategoryItem(2, "Пивас"),
         CategoryItem(3, "Помидор"),
         CategoryItem(0, "Огурец"),
         CategoryItem(1, "Сыр"),
+        CategoryItem(2, "Пивас"),
+        CategoryItem(2, "Пивасик"),
+        CategoryItem(2, "Пивчанский"),
+        CategoryItem(2, "Пиво"),
         CategoryItem(2, "Соль"),
         CategoryItem(3, "Молоко"),
         CategoryItem(0, "Куриное филе"),
+        CategoryItem(0, "Шавуха"),
         CategoryItem(1, "Перец"),
         CategoryItem(2, "Творог"),
         CategoryItem(3, "Сахар"),
     )
 
+    // var because list changes because of userInput changes
+    var filteredCategories = categories.filter { category ->
+        category.name.lowercase().startsWith(userInput.lowercase())
+    }
+
+    val boxPadding = 8.dp
     FlowRow(
-        modifier = Modifier.padding(16.dp),
-        horizontalSpacing = 20.dp,
-        verticalSpacing = 20.dp
+        modifier = Modifier.padding(horizontal = 15.dp),
+        horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
-        for (category in categories) {
+        for (category in filteredCategories) {
             Box(
-                Modifier
-                    .clip(shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
-                    .background(getRandomColor())
-                    .wrapContentWidth()
+                modifier = Modifier.padding(top = boxPadding)
             ) {
-                Text(
-                    text = category.name,
-                    modifier = Modifier.padding(all = 7.dp),
-                    color = Color.White,
-                    fontSize = 18.sp
-                )
+                Box(
+                    Modifier
+                        .clip(shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 12.dp))
+                        .background(Color(0xFF4D4D4D))
+                        .wrapContentWidth()
+                        .animateContentSize()
+                ) {
+                    Text(
+                        text = category.name,
+                        modifier = Modifier.padding(all = 7.dp),
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
+                }
             }
         }
     }
