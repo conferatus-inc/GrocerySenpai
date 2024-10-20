@@ -1,16 +1,13 @@
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,29 +41,25 @@ fun ListOfCategories(userInput: String) {
         category.name.lowercase().startsWith(userInput.lowercase())
     }
 
-    val boxPadding = 8.dp
+    val boxPadding = 7.dp
     FlowRow(
         modifier = Modifier.padding(horizontal = 15.dp),
         horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
         for (category in filteredCategories) {
-            Box(
-                modifier = Modifier.padding(top = boxPadding)
+            TextButton(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF4D4D4D),
+                    contentColor = Color(0xFFC2BEBE)
+                ),
+                shape = RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp),
             ) {
-                Box(
-                    Modifier
-                        .clip(shape = RoundedCornerShape(12.dp, 12.dp, 12.dp, 12.dp))
-                        .background(Color(0xFF4D4D4D))
-                        .wrapContentWidth()
-                        .animateContentSize()
-                ) {
-                    Text(
-                        text = category.name,
-                        modifier = Modifier.padding(all = 7.dp),
-                        color = Color.White,
-                        fontSize = 18.sp
-                    )
-                }
+                Text(
+                    text = category.name,
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
             }
         }
     }
