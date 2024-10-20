@@ -16,7 +16,7 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 @OptIn(ExperimentalLayoutApi::class)
 //@Preview
 @Composable
-fun ListOfCategories(userInput: String) {
+fun ListOfCategories(userInput: String, onClick: () -> Unit) {
     val categories = mutableListOf(
         // TODO: take from DB
         CategoryItem(1, "Хлеб"),
@@ -36,19 +36,23 @@ fun ListOfCategories(userInput: String) {
         CategoryItem(3, "Сахар"),
     )
 
-    // var because list changes because of userInput changes
-    var filteredCategories = categories.filter { category ->
-        category.name.lowercase().startsWith(userInput.lowercase())
+    fun filterCategories(): List<CategoryItem> {
+        return categories.filter { category ->
+            category.name.lowercase().startsWith(userInput.lowercase())
+        }
     }
+
+    // var because list changes because of userInput changes
+//    var filteredCategories = filterCategories()
 
     val boxPadding = 7.dp
     FlowRow(
         modifier = Modifier.padding(horizontal = 15.dp),
         horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
-        for (category in filteredCategories) {
+        for (category in filterCategories()) {
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF4D4D4D),
                     contentColor = Color(0xFFC2BEBE)
