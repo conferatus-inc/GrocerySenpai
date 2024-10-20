@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -16,7 +17,7 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 @OptIn(ExperimentalLayoutApi::class)
 //@Preview
 @Composable
-fun ListOfCategories(userInput: String, onClick: () -> Unit) {
+fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
     val categories = mutableListOf(
         // TODO: take from DB
         CategoryItem(1, "Хлеб"),
@@ -45,24 +46,23 @@ fun ListOfCategories(userInput: String, onClick: () -> Unit) {
     // var because list changes because of userInput changes
 //    var filteredCategories = filterCategories()
 
-    val boxPadding = 7.dp
+    val boxPadding = 10.dp
     FlowRow(
-        modifier = Modifier.padding(horizontal = 15.dp),
+        modifier = Modifier.padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
         for (category in filterCategories()) {
             TextButton(
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4D4D4D),
-                    contentColor = Color(0xFFC2BEBE)
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 shape = RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp),
             ) {
                 Text(
                     text = category.name,
-                    color = Color.White,
-                    fontSize = 18.sp
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
         }

@@ -25,8 +25,8 @@ fun ItemEntryComponent(
     amountText: String,
     modifier: Modifier = Modifier,
     rightSideComponents: List<@Composable () -> Unit> = emptyList(),
-    horizontalPadding: Dp = 12.dp,
-    verticalPadding: Dp = 14.dp
+    horizontalPadding: Dp = 10.dp,
+    verticalPadding: Dp = 10.dp
 ) {
     Box(
         modifier = modifier

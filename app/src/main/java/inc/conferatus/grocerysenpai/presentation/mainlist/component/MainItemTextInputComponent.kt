@@ -29,8 +29,8 @@ fun MainItemTextInputComponent(
     onValueChange: (String) -> Unit,
     isError: Boolean,
     modifier: Modifier = Modifier,
-    horizontalPadding : Dp = 12.dp,
-    verticalPadding : Dp = 12.dp,
+    horizontalPadding : Dp = 10.dp,
+    verticalPadding : Dp = 10.dp,
 ) {
     OutlinedTextField(
         isError = isError,
