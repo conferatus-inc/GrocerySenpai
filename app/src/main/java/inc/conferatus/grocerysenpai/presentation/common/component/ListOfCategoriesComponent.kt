@@ -9,16 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 
 @OptIn(ExperimentalLayoutApi::class)
-//@Preview
 @Composable
 fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
-    val categories = mutableListOf(
+    val categories = listOf(
         // TODO: take from DB
         CategoryItem(1, "Хлеб"),
         CategoryItem(3, "Помидор"),
@@ -37,21 +34,25 @@ fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
         CategoryItem(3, "Сахар"),
     )
 
-    fun filterCategories(): List<CategoryItem> {
+    // TODO: не показывать те категории, которые уже добавлены
+    // TODO: возможно фильтровать с учётом грамматических ошибок
+    fun filterCategories(categories: List<CategoryItem>): List<CategoryItem> {
         return categories.filter { category ->
             category.name.lowercase().startsWith(userInput.lowercase())
-        }
+        }.take(10)
     }
 
-    // var because list changes because of userInput changes
-//    var filteredCategories = filterCategories()
+    // TODO: в будущем наверное сортировать по частоте использования
+    fun sortCategories(categories: List<CategoryItem>): List<CategoryItem> {
+        return categories.shuffled()
+    }
 
     val boxPadding = 10.dp
     FlowRow(
         modifier = Modifier.padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
-        for (category in filterCategories()) {
+        for (category in sortCategories(filterCategories(categories))) {
             TextButton(
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
