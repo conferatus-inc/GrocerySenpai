@@ -18,7 +18,7 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 //@Preview
 @Composable
 fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
-    val categories = listOf(
+    val categories = mutableListOf(
         // TODO: take from DB
         CategoryItem(1, "Хлеб"),
         CategoryItem(3, "Помидор"),
@@ -47,12 +47,11 @@ fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
 //    var filteredCategories = filterCategories()
 
     val boxPadding = 10.dp
-    val filterCategories = filterCategories() // todo функция по идее не совсем к компосабле относится, мб лучше перенести? не критично
     FlowRow(
         modifier = Modifier.padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
-         filterCategories.forEach {
+        for (category in filterCategories()) {
             TextButton(
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
@@ -62,7 +61,7 @@ fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
                 shape = RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp),
             ) {
                 Text(
-                    text = it.name,
+                    text = category.name,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
