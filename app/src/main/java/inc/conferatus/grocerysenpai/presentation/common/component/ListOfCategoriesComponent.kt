@@ -14,7 +14,11 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
+fun ListOfCategoriesComponent(
+    userInput: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val categories = listOf(
         // TODO: take from DB
         CategoryItem(1, "Хлеб"),
@@ -52,17 +56,17 @@ fun ListOfCategoriesComponent(userInput: String, onClick: () -> Unit) {
         modifier = Modifier.padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(boxPadding)
     ) {
-        for (category in sortCategories(filterCategories(categories))) {
+        sortCategories(filterCategories(categories)).forEach {
             TextButton(
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
-                shape = RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp),
+                shape = MaterialTheme.shapes.small
             ) {
                 Text(
-                    text = category.name,
+                    text = it.name,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
