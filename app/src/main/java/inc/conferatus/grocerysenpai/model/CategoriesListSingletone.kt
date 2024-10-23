@@ -9,6 +9,5 @@ import javax.inject.Singleton
 class CategoriesListSingletone @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) {
-    var categories : List<CategoryItem> = categoryRepository.getAllCategories()
-        private set
+    val categories : List<CategoryItem> = categoryRepository.getAllCategories()
 }

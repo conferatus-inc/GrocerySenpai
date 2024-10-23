@@ -11,11 +11,13 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.model.repository.CategoryRepository
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
+import inc.conferatus.grocerysenpai.model.util.CategoriesUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.lang.RuntimeException
 import java.time.Instant
 import java.util.Date
 import javax.inject.Inject
@@ -35,6 +37,12 @@ class MainListViewModel @Inject constructor(
     var isInputValidated by mutableStateOf(false)
         private set
 
+    var currentCategory: CategoryItem? by mutableStateOf(null)
+        private set
+
+    var suggestedCategories: List<String> by mutableStateOf(emptyList())
+        private set
+
     init {
         tryValidateItemInput()
 
@@ -48,15 +56,26 @@ class MainListViewModel @Inject constructor(
     }
 
     fun addItem() {
-//        viewModelScope.launch {
-//            _uiState.update {
-//                it.copy(
-//                    groceryItems = it.groceryItems.plus(newItem)
-//                )
-//            }
-//
-//            groceryRepository.insertGrocery(newItem)
-//        }
+        if (currentCategory == null) {
+            throw RuntimeException("насрал") // todo норм исклюючение сделать
+        }
+
+        val newItem = GroceryItem(
+            category = currentCategory!!, // todo мб будет падать хз
+            description = "no description yet",
+            amount = 1,
+            amountPostfix = "шт",
+        )
+
+        _uiState.update {
+            it.copy(
+                groceryItems = it.groceryItems.plus(newItem)
+            )
+        }
+
+        viewModelScope.launch {
+            groceryRepository.insertGrocery(newItem)
+        }
 
         updateItemInput("")
     }
@@ -78,14 +97,16 @@ class MainListViewModel @Inject constructor(
     }
 
     private fun tryValidateItemInput() {
-        isInputValidated = itemInput.isNotBlank()
+        currentCategory = CategoriesUtils.byName(itemInput, categoriesListSingletone.categories);
+        isInputValidated = currentCategory != null // todo будут условия на регулярном выражении еще
+        viewModelScope.launch {
+            suggestedCategories = CategoriesUtils.sort(
+                categories = CategoriesUtils.filter(
+                    inputBeginning = itemInput,
+                    categories = categoriesListSingletone.categories
+                ),
+                limit = 10
+            ).map { it.name }
+        }
     }
-
-//    fun clear() {
-//        _uiState.update {
-//            it.copy(
-//                groceryListItems = emptyList(),
-//            )
-//        }
-//    }
 }

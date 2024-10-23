@@ -8,5 +8,5 @@ data class GroceryItem(
     val description: String,
     val amount: Int,
     val amountPostfix: String,
-    val bought: Date?
+    val bought: Date? = null
 )
