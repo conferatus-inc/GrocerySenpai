@@ -8,5 +8,5 @@ import javax.inject.Singleton
 
 @Singleton
 interface CategoryRepository {
-    fun getAllCategories(): List<CategoryItem> // not stream, todo
+    fun getAllCategories(): List<CategoryItem>
 }

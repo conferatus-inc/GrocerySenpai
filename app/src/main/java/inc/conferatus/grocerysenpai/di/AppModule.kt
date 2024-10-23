@@ -22,8 +22,11 @@ object AppModule {
         return Room.databaseBuilder(
             app,
             GroceryDatabase::class.java,
-            GroceryDatabase.DATABASE_NAME
-        ).allowMainThreadQueries().build()
+            GroceryDatabase.DATABASE_NAME)
+            .createFromAsset("database/prep_categories.db")
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration() // ?? ttemporary TODO
+            .build()
     }
 
     @Provides
