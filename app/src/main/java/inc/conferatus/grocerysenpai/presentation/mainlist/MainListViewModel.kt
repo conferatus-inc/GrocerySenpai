@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import inc.conferatus.grocerysenpai.model.CategoriesListSingletone
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
@@ -19,12 +20,11 @@ import java.time.Instant
 import java.util.Date
 import javax.inject.Inject
 
-//@HiltViewModel
+@HiltViewModel
 // todo часть логики отсюда будет в модели
 class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
-    private val categoryRepository: CategoryRepository,
-    /*private*/ val categoriesListSingletone: CategoriesListSingletone
+    val categoriesListSingletone: CategoriesListSingletone
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainListUiState())
     val uiState = _uiState.asStateFlow()
@@ -44,36 +44,19 @@ class MainListViewModel @Inject constructor(
                     groceryItems = groceryRepository.getAllGroceriesStream().first()
                 )
             }
-
-            val category = categoryRepository.getCategoryStreamByName("Beer").first()
-            if (category == null) {
-                categoryRepository.insertCategory(CategoryItem(name = "Beer")) // сделать адекватно препопулате
-            }
         }
-
     }
 
     fun addItem() {
-        viewModelScope.launch {
-            val category = categoryRepository.getCategoryStreamByName("Beer").first()
-            assert(category != null)
-
-            val newItem = GroceryItem(
-                category = category!!,
-                description = itemInput,
-                amount = 2,
-                amountPostfix = "kg",
-                bought = null
-            )
-
-            _uiState.update {
-                it.copy(
-                    groceryItems = it.groceryItems.plus(newItem)
-                )
-            }
-
-            groceryRepository.insertGrocery(newItem)
-        }
+//        viewModelScope.launch {
+//            _uiState.update {
+//                it.copy(
+//                    groceryItems = it.groceryItems.plus(newItem)
+//                )
+//            }
+//
+//            groceryRepository.insertGrocery(newItem)
+//        }
 
         updateItemInput("")
     }

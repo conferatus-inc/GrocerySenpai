@@ -12,16 +12,4 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryDao {
     @Query("select * from categories")
     fun getCategories(): List<CategoryEntity>
-
-    @Query("select * from categories where id = :id")
-    fun getCategoryById(id: Int): Flow<CategoryEntity?> // todo not needed?
-
-    @Query("select * from categories where name = :name")
-    fun getCaterogyByName(name: String): Flow<CategoryEntity?>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategory(category: CategoryEntity)
-
-    @Delete
-    suspend fun deleteCategory(category: CategoryEntity)
 }
