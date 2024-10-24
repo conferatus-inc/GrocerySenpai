@@ -1,7 +1,12 @@
 package inc.conferatus.grocerysenpai.presentation.mainlist
 
+import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 
+// todo вот это стоит приделывать или нет пока хз
 data class MainListUiState(
-    val groceryItems: List<GroceryItem> = emptyList()
+    val textInput: String = "",
+    val isInputValidated: Boolean = false,
+    val currentCategory: CategoryItem? = null,
+    val suggestedCategories: List<CategoryItem> = listOf()
 )

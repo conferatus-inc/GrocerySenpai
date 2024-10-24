@@ -16,9 +16,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-//    @Inject
-//    lateinit var viewModel: MainListViewModel
-
     val viewModel: MainListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

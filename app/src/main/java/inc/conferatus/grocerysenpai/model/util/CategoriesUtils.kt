@@ -5,25 +5,21 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 // TODO: возможно фильтровать с учётом грамматических ошибок
 class CategoriesUtils {
     companion object {
-        fun filter(
+        fun List<CategoryItem>.filterCategories(
             inputBeginning: String,
-            categories: List<CategoryItem>,
-            limit: Int = Int.MAX_VALUE
+            limit: Int = this.size
         ): List<CategoryItem> {
-            return categories
-                .filter { it.name.lowercase().startsWith(inputBeginning.lowercase()) }
+            return this.filter { it.name.lowercase().startsWith(inputBeginning.lowercase()) }
                 .take(limit)
         }
 
         // todo сортировка по частоте использования + нахождению в списке
-        fun sort(
-            categories: List<CategoryItem>,
-            limit: Int = Int.MAX_VALUE
+        fun List<CategoryItem>.sortCategories(
+            limit: Int = this.size
             // comparator??
             // something else?
         ): List<CategoryItem> {
-            return categories
-                .shuffled()
+            return this.shuffled()
                 .take(limit)
         }
 

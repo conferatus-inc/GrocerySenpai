@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ItemEntryComponent(
+fun EntryComponent(
     mainText: String,
     secondaryText: String,
     amountText: String,

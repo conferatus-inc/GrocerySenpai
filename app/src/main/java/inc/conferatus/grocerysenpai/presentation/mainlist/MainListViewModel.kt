@@ -9,14 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import inc.conferatus.grocerysenpai.model.CategoriesListSingletone
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
-import inc.conferatus.grocerysenpai.model.repository.CategoryRepository
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
+import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.filterCategories
+import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.sortCategories
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import java.time.Instant
@@ -29,34 +25,25 @@ class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
     val categoriesListSingletone: CategoriesListSingletone
 ) : ViewModel() {
-    val currentGroceries = groceryRepository.getAllGroceriesStream()
+    val currentGroceries = groceryRepository.getCurrentGroceriesStream()
 
-    // todo все нижележащее - в uistate???
-
-    var itemInput by mutableStateOf("")
-        private set
-
-    var isInputValidated by mutableStateOf(false)
-        private set
-
-    var currentCategory: CategoryItem? by mutableStateOf(null)
-        private set
-
-    var suggestedCategories: List<String> by mutableStateOf(emptyList())
-        private set
+    var textInput by mutableStateOf(""); private set
+    var isInputValidated by mutableStateOf(false); private set
+    var inputCategory: CategoryItem? by mutableStateOf(null); private set
+    var suggestedCategories: List<String> by mutableStateOf(emptyList()); private set
 
     init {
-        tryValidateItemInput()
+        validateInput()
     }
 
     fun addItem() {
-        if (currentCategory == null) {
+        if (inputCategory == null) {
             throw RuntimeException("насрал") // todo норм исключение сделать
         }
 
         val newItem = GroceryItem(
-            category = currentCategory!!, // todo мб будет падать хз
-            description = "no description yet",
+            category = inputCategory!!,
+            description = "no description",
             amount = 1,
             amountPostfix = "шт",
         )
@@ -65,7 +52,7 @@ class MainListViewModel @Inject constructor(
             groceryRepository.insertGrocery(newItem)
         }
 
-        updateItemInput("")
+        updateInput("")
     }
 
     fun removeItem(item: GroceryItem) {
@@ -74,23 +61,20 @@ class MainListViewModel @Inject constructor(
         }
     }
 
-    fun updateItemInput(newItemInput: String) {
-        itemInput = newItemInput
-        tryValidateItemInput()
+    fun updateInput(newItemInput: String) {
+        textInput = newItemInput
+        validateInput()
     }
 
-    private fun tryValidateItemInput() {
-        currentCategory = CategoriesUtils.byName(itemInput, categoriesListSingletone.categories);
-        isInputValidated = currentCategory != null
+    private fun validateInput() {
+        inputCategory = CategoriesUtils.byName(textInput, categoriesListSingletone.categories);
+        isInputValidated = inputCategory != null
 
         viewModelScope.launch {
-            suggestedCategories = CategoriesUtils.sort(
-                categories = CategoriesUtils.filter(
-                    inputBeginning = itemInput,
-                    categories = categoriesListSingletone.categories
-                ),
-                limit = 10
-            ).map { it.name }
+            suggestedCategories = categoriesListSingletone.categories
+                .filterCategories(inputBeginning = textInput)
+                .sortCategories(limit = 12)
+                .map { it.name }
         }
     }
 }

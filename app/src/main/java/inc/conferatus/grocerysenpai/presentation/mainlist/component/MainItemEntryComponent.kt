@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import inc.conferatus.grocerysenpai.R
-import inc.conferatus.grocerysenpai.presentation.common.component.ItemEntryComponent
+import inc.conferatus.grocerysenpai.presentation.common.component.EntryComponent
 
 @Composable
 fun MainItemEntryComponent(
@@ -19,7 +19,7 @@ fun MainItemEntryComponent(
     onRemoveButton: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ItemEntryComponent(
+    EntryComponent(
         mainText = mainText,
         secondaryText = secondaryText,
         amountText = amountText,
