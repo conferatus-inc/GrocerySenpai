@@ -42,6 +42,7 @@ class GroceryRepositoryImpl(
     }
 
     override suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: Date?) {
+        println("we were here")
         dao.updateGrocery(groceryItemToEntity(item.copy(bought = bought)))
     }
 

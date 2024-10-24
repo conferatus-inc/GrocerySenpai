@@ -15,6 +15,7 @@ import inc.conferatus.grocerysenpai.model.util.CategoriesUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
@@ -28,8 +29,9 @@ class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
     val categoriesListSingletone: CategoriesListSingletone
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(MainListUiState())
-    val uiState = _uiState.asStateFlow()
+    val currentGroceries = groceryRepository.getAllGroceriesStream()
+
+    // todo все нижележащее - в uistate???
 
     var itemInput by mutableStateOf("")
         private set
@@ -45,19 +47,11 @@ class MainListViewModel @Inject constructor(
 
     init {
         tryValidateItemInput()
-
-        viewModelScope.launch {
-            _uiState.update { // todo хрень
-                it.copy(
-                    groceryItems = groceryRepository.getAllGroceriesStream().first()
-                )
-            }
-        }
     }
 
     fun addItem() {
         if (currentCategory == null) {
-            throw RuntimeException("насрал") // todo норм исклюючение сделать
+            throw RuntimeException("насрал") // todo норм исключение сделать
         }
 
         val newItem = GroceryItem(
@@ -66,12 +60,6 @@ class MainListViewModel @Inject constructor(
             amount = 1,
             amountPostfix = "шт",
         )
-
-        _uiState.update {
-            it.copy(
-                groceryItems = it.groceryItems.plus(newItem)
-            )
-        }
 
         viewModelScope.launch {
             groceryRepository.insertGrocery(newItem)
@@ -84,11 +72,6 @@ class MainListViewModel @Inject constructor(
         viewModelScope.launch {
             groceryRepository.updateGroceryBoughtDate(item, Date.from(Instant.now()))
         }
-        _uiState.update { state ->
-            state.copy(
-                groceryItems = state.groceryItems.filter { it !== item }
-            )
-        }
     }
 
     fun updateItemInput(newItemInput: String) {
@@ -98,7 +81,8 @@ class MainListViewModel @Inject constructor(
 
     private fun tryValidateItemInput() {
         currentCategory = CategoriesUtils.byName(itemInput, categoriesListSingletone.categories);
-        isInputValidated = currentCategory != null // todo будут условия на регулярном выражении еще
+        isInputValidated = currentCategory != null
+
         viewModelScope.launch {
             suggestedCategories = CategoriesUtils.sort(
                 categories = CategoriesUtils.filter(

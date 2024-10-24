@@ -29,7 +29,7 @@ class CategoriesUtils {
 
         fun byName(
             name: String,
-            allCategories: List<CategoryItem>
+            allCategories: List<CategoryItem> // todo тут можно не статиками сделать а нормально
         ): CategoryItem? {
                 return allCategories.firstOrNull { it.name.lowercase() == name.lowercase() }
         }

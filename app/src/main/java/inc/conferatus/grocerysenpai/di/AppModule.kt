@@ -25,7 +25,7 @@ object AppModule {
             GroceryDatabase.DATABASE_NAME)
             .createFromAsset("database/prep_categories.db")
             .allowMainThreadQueries()
-            .fallbackToDestructiveMigration() // ?? ttemporary TODO
+//            .fallbackToDestructiveMigration() // ?? ttemporary TODO
             .build()
     }
 
