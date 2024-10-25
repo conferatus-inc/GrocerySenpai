@@ -12,7 +12,7 @@ import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.presentation.common.component.EntryComponent
 
 @Composable
-fun MainItemEntryComponent(
+fun HistoryEntryComponent(
     mainText: String,
     secondaryText: String,
     amountText: String,
