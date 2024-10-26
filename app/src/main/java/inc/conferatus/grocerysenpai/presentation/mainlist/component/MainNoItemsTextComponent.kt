@@ -9,17 +9,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import inc.conferatus.grocerysenpai.R
+import inc.conferatus.grocerysenpai.presentation.common.component.OnEmptyMessageComponent
 
 //todo font style, align and so on
 @Composable
 fun MainNoItemsTextComponent(
-    modifier: Modifier = Modifier,
-    horizontalPadding: Dp = 10.dp,
-    verticalPadding: Dp = 10.dp
+    modifier: Modifier = Modifier
 ) {
-    Text(
-        text = stringResource(R.string.grocery_no_items_text),
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = modifier.padding(horizontalPadding, verticalPadding)
-    )
+   OnEmptyMessageComponent(text = stringResource(R.string.grocery_no_items_text))
 }

@@ -8,6 +8,7 @@ import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import java.util.Date
 
 class GroceryRepositoryImpl(
@@ -41,7 +42,7 @@ class GroceryRepositoryImpl(
         dao.updateGrocery(groceryItemToEntity(item))
     }
 
-    override suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: Date?) {
+    override suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: LocalDate?) {
         println("we were here")
         dao.updateGrocery(groceryItemToEntity(item.copy(bought = bought)))
     }

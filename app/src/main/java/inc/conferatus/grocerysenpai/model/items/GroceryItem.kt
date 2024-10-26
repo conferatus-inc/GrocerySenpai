@@ -1,6 +1,6 @@
 package inc.conferatus.grocerysenpai.model.items
 
-import java.util.Date
+import java.time.LocalDate
 
 data class GroceryItem(
     val id: Int = 0,
@@ -8,5 +8,5 @@ data class GroceryItem(
     val description: String,
     val amount: Int,
     val amountPostfix: String,
-    val bought: Date? = null
+    val bought: LocalDate? = null
 )

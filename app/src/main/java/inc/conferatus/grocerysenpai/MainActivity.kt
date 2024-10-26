@@ -7,16 +7,39 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val viewModel: MainListViewModel by viewModels()
+    @Composable
+    fun GrocerySenpaiScreen() {
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = "main",
+        ) {
+            composable(route = "main") {
+                val mainListViewModel: MainListViewModel by viewModels()
+                MainListScreen(
+                    viewModel = mainListViewModel,
+                    onGoToHistoryClick =
+                )
+            }
+
+            composable(route = "history") {
+
+            }
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainListScreen(viewModel)
+                    GrocerySenpaiScreen()
                 }
             }
         }

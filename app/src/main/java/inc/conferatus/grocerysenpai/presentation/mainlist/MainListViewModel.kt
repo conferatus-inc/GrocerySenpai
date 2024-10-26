@@ -11,6 +11,7 @@ import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils
+import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.byName
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.filterCategories
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.sortCategories
 import kotlinx.coroutines.launch
@@ -57,6 +58,12 @@ class MainListViewModel @Inject constructor(
 
     fun removeItem(item: GroceryItem) {
         viewModelScope.launch {
+            groceryRepository.deleteGrocery(item)
+        }
+    }
+
+    fun buyItem(item: GroceryItem) { // todo maybe rename??
+        viewModelScope.launch {
             groceryRepository.updateGroceryBoughtDate(item, Date.from(Instant.now()))
         }
     }
@@ -67,7 +74,7 @@ class MainListViewModel @Inject constructor(
     }
 
     private fun validateInput() {
-        inputCategory = CategoriesUtils.byName(textInput, categoriesListSingletone.categories);
+        inputCategory = categoriesListSingletone.categories.byName(textInput);
         isInputValidated = inputCategory != null
 
         viewModelScope.launch {

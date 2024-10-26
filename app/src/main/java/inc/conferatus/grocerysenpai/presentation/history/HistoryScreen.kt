@@ -1,14 +1,16 @@
 package inc.conferatus.grocerysenpai.presentation.mainlist
 
-import CategoriesSuggesterComponent
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,11 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import inc.conferatus.grocerysenpai.R
+import inc.conferatus.grocerysenpai.model.util.HistoryGroceriesUtils.Companion.groupByDateDescending
+import inc.conferatus.grocerysenpai.presentation.history.component.HistoryNoItemsTextComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.HistoryEntryComponent
-import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainItemTextInputComponent
-import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainNoItemsTextComponent
-
-//import androidx.hilt.navigation.compose.hiltViewModel
 
 // todo TODO!!!!!!!!!!!!
 // todo мб сюда вообще не отдавать айтемы, а чисто стрингами все?? подумать как будет лучше архитектурно
@@ -31,40 +31,29 @@ import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainNoItemsT
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainListScreen(viewModel: MainListViewModel) {
-    val currentGroceries by viewModel.currentGroceries.collectAsState(initial = emptyList())
+fun HistoryScreen(
+    viewModel: HistoryViewModel,
+    onGoBackClick: () -> Unit
+) {
+    val historyGroceries by viewModel.historyGroceries.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.app_name),
+                        text = stringResource(R.string.history_title),
                         style = MaterialTheme.typography.headlineSmall
                     )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onGoBackClick
+                    ) {
+                        Icon(Icons.Default.ArrowBack, stringResource(R.string.go_back_btn))
+                    }
                 }
             )
-        },
-
-        bottomBar = {
-            Column(
-                modifier = Modifier,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-
-                CategoriesSuggesterComponent(
-                    onCategoryClick = { viewModel.updateInput(it) },
-                    categories = viewModel.suggestedCategories
-                )
-                MainItemTextInputComponent(
-                    value = viewModel.textInput,
-                    onInsertClick = viewModel::addItem,
-                    onValueChange = { value ->
-                        viewModel.updateInput(value)
-                    },
-                    isError = !viewModel.isInputValidated
-                )
-            }
         }
     ) { innerPadding ->
         Column(
@@ -74,12 +63,17 @@ fun MainListScreen(viewModel: MainListViewModel) {
                 .verticalScroll(rememberScrollState())
         ) {
 
-            if (currentGroceries.isEmpty()) {
-                MainNoItemsTextComponent()
+            if (historyGroceries.isEmpty()) {
+                HistoryNoItemsTextComponent()
             } else {
-                currentGroceries.forEach {
+                historyGroceries.groupByDateDescending().forEach {
+                    Text(
+                        text = it.key.form
+                        style = MaterialTheme.typography.bodyLarge
+                    ),
+
                     HistoryEntryComponent(
-                        mainText = it.category.name,
+                        mainText
                         secondaryText = it.description,
                         amountText = "%d %s".format(it.amount, it.amountPostfix),
                         onRemoveButton = { viewModel.removeItem(it) }

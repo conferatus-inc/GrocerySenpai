@@ -32,14 +32,6 @@ fun HistoryEntryComponent(
             ) {
                 Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
             }
-
-            TextButton(
-                onClick = onRemoveButton,
-                modifier = modifier,
-                shape = CircleShape
-            ) {
-                Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
-            }
         }
     )
 }

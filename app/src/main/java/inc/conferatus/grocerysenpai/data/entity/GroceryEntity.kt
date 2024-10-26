@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import java.time.LocalDate
 import java.util.Date
 
 @Entity(tableName = "groceries")
@@ -14,7 +15,7 @@ data class GroceryEntity (
     val description: String,
     val amount: Int,
     val amountPostfix: String,
-    val bought: Date?
+    val bought: LocalDate?
 )
 
 data class GroceryAndCategory(

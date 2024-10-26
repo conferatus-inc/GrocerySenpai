@@ -12,13 +12,14 @@ import inc.conferatus.grocerysenpai.R
 
 //todo font style, align and so on
 @Composable
-fun MainNoItemsTextComponent(
+fun OnEmptyMessageComponent(
+    text: String,
     modifier: Modifier = Modifier,
     horizontalPadding: Dp = 10.dp,
     verticalPadding: Dp = 10.dp
 ) {
     Text(
-        text = stringResource(R.string.grocery_no_items_text),
+        text = text,
         style = MaterialTheme.typography.bodyLarge,
         modifier = modifier.padding(horizontalPadding, verticalPadding)
     )

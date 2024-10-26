@@ -3,6 +3,7 @@ package inc.conferatus.grocerysenpai.presentation.mainlist.component
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -12,10 +13,11 @@ import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.presentation.common.component.EntryComponent
 
 @Composable
-fun HistoryEntryComponent(
+fun MainListEntryComponent(
     mainText: String,
     secondaryText: String,
     amountText: String,
+    onDoneButton: () -> Unit,
     onRemoveButton: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -34,11 +36,11 @@ fun HistoryEntryComponent(
             }
 
             TextButton(
-                onClick = onRemoveButton,
+                onClick = onDoneButton,
                 modifier = modifier,
                 shape = CircleShape
             ) {
-                Icon(Icons.Default.Delete, stringResource(R.string.grocery_item_remove_btn))
+                Icon(Icons.Default.Done, stringResource(R.string.grocery_item_bought_btn))
             }
         }
     )

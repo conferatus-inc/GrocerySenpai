@@ -20,61 +20,10 @@ import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-// todo часть логики отсюда будет в модели
-class MainListViewModel @Inject constructor(
+class HistoryViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
-    val categoriesListSingletone: CategoriesListSingletone
 ) : ViewModel() {
-    val currentGroceries = groceryRepository.getCurrentGroceriesStream()
+    val historyGroceries = groceryRepository.getHistoryGroceriesStream()
 
-    var textInput by mutableStateOf(""); private set
-    var isInputValidated by mutableStateOf(false); private set
-    var inputCategory: CategoryItem? by mutableStateOf(null); private set
-    var suggestedCategories: List<String> by mutableStateOf(emptyList()); private set
 
-    init {
-        validateInput()
-    }
-
-    fun addItem() {
-        if (inputCategory == null) {
-            throw RuntimeException("насрал") // todo норм исключение сделать
-        }
-
-        val newItem = GroceryItem(
-            category = inputCategory!!,
-            description = "no description",
-            amount = 1,
-            amountPostfix = "шт",
-        )
-
-        viewModelScope.launch {
-            groceryRepository.insertGrocery(newItem)
-        }
-
-        updateInput("")
-    }
-
-    fun removeItem(item: GroceryItem) {
-        viewModelScope.launch {
-            groceryRepository.updateGroceryBoughtDate(item, Date.from(Instant.now()))
-        }
-    }
-
-    fun updateInput(newItemInput: String) {
-        textInput = newItemInput
-        validateInput()
-    }
-
-    private fun validateInput() {
-        inputCategory = CategoriesUtils.byName(textInput, categoriesListSingletone.categories);
-        isInputValidated = inputCategory != null
-
-        viewModelScope.launch {
-            suggestedCategories = categoriesListSingletone.categories
-                .filterCategories(inputBeginning = textInput)
-                .sortCategories(limit = 12)
-                .map { it.name }
-        }
-    }
 }

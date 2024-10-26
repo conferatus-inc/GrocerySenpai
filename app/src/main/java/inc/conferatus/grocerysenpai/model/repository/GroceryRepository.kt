@@ -2,6 +2,7 @@ package inc.conferatus.grocerysenpai.model.repository
 
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.util.Date
 import javax.inject.Singleton
 
@@ -20,5 +21,5 @@ interface GroceryRepository {
 
     suspend fun updateGrocery(item: GroceryItem)
 
-    suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: Date?) // по моему это логичнее в бизнесе сделать
+    suspend fun updateGroceryBoughtDate(item: GroceryItem, bought: LocalDate?) // по моему это логичнее в бизнесе сделать
 }

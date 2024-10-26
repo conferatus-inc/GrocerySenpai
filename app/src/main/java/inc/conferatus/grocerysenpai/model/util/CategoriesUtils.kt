@@ -2,9 +2,9 @@ package inc.conferatus.grocerysenpai.model.util
 
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 
-// TODO: возможно фильтровать с учётом грамматических ошибок
 class CategoriesUtils {
     companion object {
+        // TODO: возможно фильтровать с учётом грамматических ошибок
         fun List<CategoryItem>.filterCategories(
             inputBeginning: String,
             limit: Int = this.size
@@ -23,11 +23,10 @@ class CategoriesUtils {
                 .take(limit)
         }
 
-        fun byName(
-            name: String,
-            allCategories: List<CategoryItem> // todo тут можно не статиками сделать а нормально
+        fun List<CategoryItem>.byName(
+            name: String
         ): CategoryItem? {
-                return allCategories.firstOrNull { it.name.lowercase() == name.lowercase() }
+            return this.firstOrNull { it.name.lowercase() == name.lowercase() }
         }
     }
 }

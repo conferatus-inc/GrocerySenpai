@@ -13,8 +13,8 @@ import inc.conferatus.grocerysenpai.presentation.common.component.OnEmptyMessage
 
 //todo font style, align and so on
 @Composable
-fun MainNoItemsTextComponent(
+fun HistoryNoItemsTextComponent(
     modifier: Modifier = Modifier
 ) {
-   OnEmptyMessageComponent(text = stringResource(R.string.grocery_no_items_text))
+   OnEmptyMessageComponent(text = stringResource(R.string.history_no_items_text))
 }
