@@ -17,6 +17,7 @@ import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.sortCat
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
 
@@ -64,7 +65,7 @@ class MainListViewModel @Inject constructor(
 
     fun buyItem(item: GroceryItem) { // todo maybe rename??
         viewModelScope.launch {
-            groceryRepository.updateGroceryBoughtDate(item, Date.from(Instant.now()))
+            groceryRepository.updateGroceryBoughtDate(item, LocalDate.now())
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import java.util.Date
 
 @Entity(tableName = "groceries")
@@ -15,7 +16,7 @@ data class GroceryEntity (
     val description: String,
     val amount: Int,
     val amountPostfix: String,
-    val bought: LocalDate?
+    val bought: ZonedDateTime?
 )
 
 data class GroceryAndCategory(

@@ -24,6 +24,4 @@ class HistoryViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
 ) : ViewModel() {
     val historyGroceries = groceryRepository.getHistoryGroceriesStream()
-
-
 }
