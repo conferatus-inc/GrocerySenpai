@@ -1,3 +1,4 @@
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -18,7 +19,9 @@ fun CategoriesSuggesterComponent(
     modifier: Modifier = Modifier
 ) {
     FlowRow(
-        modifier = modifier.padding(horizontal = 10.dp),
+        modifier = modifier
+            .padding(horizontal = 10.dp)
+            .animateContentSize(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         categories.forEach {

@@ -24,4 +24,21 @@ class HistoryViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
 ) : ViewModel() {
     val historyGroceries = groceryRepository.getHistoryGroceriesStream()
+
+    fun addItem(item: GroceryItem) {
+        viewModelScope.launch {
+            groceryRepository.insertGrocery(
+                item.copy(
+                    id = 0,
+                    bought = null
+                )
+            )
+        }
+    }
+
+    fun removeItem(item: GroceryItem) {
+        viewModelScope.launch {
+            groceryRepository.deleteGrocery(item)
+        }
+    }
 }

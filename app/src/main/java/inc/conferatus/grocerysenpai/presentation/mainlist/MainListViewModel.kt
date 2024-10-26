@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import java.util.Date
 import javax.inject.Inject
 
@@ -65,7 +66,7 @@ class MainListViewModel @Inject constructor(
 
     fun buyItem(item: GroceryItem) { // todo maybe rename??
         viewModelScope.launch {
-            groceryRepository.updateGroceryBoughtDate(item, LocalDate.now())
+            groceryRepository.updateGroceryBoughtDate(item, ZonedDateTime.now())
         }
     }
 

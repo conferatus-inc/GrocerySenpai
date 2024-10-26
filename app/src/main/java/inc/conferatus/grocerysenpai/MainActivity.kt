@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryScreen
+import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
@@ -30,12 +32,17 @@ class MainActivity : ComponentActivity() {
                 val mainListViewModel: MainListViewModel by viewModels()
                 MainListScreen(
                     viewModel = mainListViewModel,
-                    onGoToHistoryClick =
+                    onGoToHistoryClick = { navController.navigate("history")}
                 )
             }
 
             composable(route = "history") {
-
+                val historyViewModel: HistoryViewModel by viewModels()
+                HistoryScreen(
+                    viewModel = historyViewModel,
+                    onGoBackClick = { navController.navigate("main")}
+//                    onGoBackClick = { navController.navigateUp()}
+                )
             }
 
         }
