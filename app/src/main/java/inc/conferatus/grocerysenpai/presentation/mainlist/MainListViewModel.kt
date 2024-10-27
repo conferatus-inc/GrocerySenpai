@@ -10,16 +10,11 @@ import inc.conferatus.grocerysenpai.model.CategoriesListSingletone
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
-import inc.conferatus.grocerysenpai.model.util.CategoriesUtils
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.byName
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.filterCategories
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.sortCategories
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
-import java.time.Instant
-import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,13 +71,13 @@ class MainListViewModel @Inject constructor(
     }
 
     private fun validateInput() {
-        inputCategory = categoriesListSingletone.categories.byName(textInput);
+        inputCategory = categoriesListSingletone.categories.byName(textInput)
         isInputValidated = inputCategory != null
 
         viewModelScope.launch {
             suggestedCategories = categoriesListSingletone.categories
                 .filterCategories(inputBeginning = textInput)
-                .sortCategories(limit = 12)
+                .sortCategories(limit = 7)
                 .map { it.name }
         }
     }

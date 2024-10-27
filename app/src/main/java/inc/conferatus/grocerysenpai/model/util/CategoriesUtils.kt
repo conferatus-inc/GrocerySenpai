@@ -9,8 +9,9 @@ class CategoriesUtils {
             inputBeginning: String,
             limit: Int = this.size
         ): List<CategoryItem> {
-            return this.filter { it.name.lowercase().startsWith(inputBeginning.lowercase()) }
-                .take(limit)
+            return this.filter { it.name.startsWith(inputBeginning, ignoreCase = true) } +
+                    this.filter { it.name.contains(inputBeginning, ignoreCase = true) }
+                        .take(limit)
         }
 
         // todo сортировка по частоте использования + нахождению в списке
