@@ -1,5 +1,7 @@
 package inc.conferatus.grocerysenpai.model.util
 
+import java.util.regex.Pattern
+
 class ParseInputUtils(private val input: String) {
     private val parsedInput = ArrayList<String>()
     private var isParsed = false;
@@ -8,8 +10,10 @@ class ParseInputUtils(private val input: String) {
         if (isParsed) {
             return
         }
-        parsedInput.addAll(input.split(" ", ","))
-        parsedInput.removeIf { it == " " }
+        parsedInput.addAll(input.split("[\\p{Punct}\\s]+"))
+        parsedInput.removeIf {
+            Pattern.matches("[\\p{Punct}\\s]+", it) || it.isEmpty() || it.isBlank()
+        }
         isParsed = true
     }
 
