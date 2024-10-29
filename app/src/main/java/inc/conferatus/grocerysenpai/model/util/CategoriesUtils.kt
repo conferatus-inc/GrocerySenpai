@@ -9,8 +9,8 @@ class CategoriesUtils {
             inputBeginning: String,
             limit: Int = this.size
         ): List<CategoryItem> {
-            return this.filter { it.name.startsWith(inputBeginning, ignoreCase = true) } +
-                    this.filter { it.name.contains(inputBeginning, ignoreCase = true) }
+            return this.filter { it.name.startsWith(inputBeginning, ignoreCase = true)
+                    || it.name.contains(inputBeginning, ignoreCase = true) }
                         .take(limit)
         }
 
