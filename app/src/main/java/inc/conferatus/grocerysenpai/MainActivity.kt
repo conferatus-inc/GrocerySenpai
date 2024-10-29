@@ -17,6 +17,8 @@ import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
+import inc.conferatus.grocerysenpai.presentation.qrscanner.QrScannerScreen
+import inc.conferatus.grocerysenpai.presentation.qrscanner.QrScannerViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 
 @AndroidEntryPoint
@@ -40,8 +42,17 @@ class MainActivity : ComponentActivity() {
                 val historyViewModel: HistoryViewModel by viewModels()
                 HistoryScreen(
                     viewModel = historyViewModel,
-                    onGoBackClick = { navController.navigate("main")}
-//                    onGoBackClick = { navController.navigateUp()}
+                    onGoBackClick = { navController.navigate("main")},
+                    onGoToQrScannerClick = { /*todo*/ }
+                )
+            }
+
+            composable(route = "qrScanner") {
+                /*todo*/
+                val qrScannerViewModel: QrScannerViewModel by viewModels()
+                QrScannerScreen(
+                    viewModel = qrScannerViewModel,
+                    /*...*/
                 )
             }
 

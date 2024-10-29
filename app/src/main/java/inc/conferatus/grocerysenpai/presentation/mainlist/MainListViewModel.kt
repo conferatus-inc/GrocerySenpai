@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import inc.conferatus.grocerysenpai.model.CategoriesListSingletone
+import inc.conferatus.grocerysenpai.model.CategoriesListSingleton
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
@@ -21,7 +21,7 @@ import javax.inject.Inject
 // todo часть логики отсюда будет в модели
 class MainListViewModel @Inject constructor(
     private val groceryRepository: GroceryRepository,
-    val categoriesListSingletone: CategoriesListSingletone
+    val categoriesListSingleton: CategoriesListSingleton
 ) : ViewModel() {
     val currentGroceries = groceryRepository.getCurrentGroceriesStream()
 
@@ -71,11 +71,11 @@ class MainListViewModel @Inject constructor(
     }
 
     private fun validateInput() {
-        inputCategory = categoriesListSingletone.categories.byName(textInput)
+        inputCategory = categoriesListSingleton.categories.byName(textInput)
         isInputValidated = inputCategory != null
 
         viewModelScope.launch {
-            suggestedCategories = categoriesListSingletone.categories
+            suggestedCategories = categoriesListSingleton.categories
                 .filterCategories(inputBeginning = textInput)
                 .sortCategories(limit = 7)
                 .map { it.name }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoriesListSingletone @Inject constructor(
+class CategoriesListSingleton @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) {
     val categories : List<CategoryItem> = categoryRepository.getAllCategories()

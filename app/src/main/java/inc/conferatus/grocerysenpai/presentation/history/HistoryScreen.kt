@@ -13,6 +13,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +39,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
-    onGoBackClick: () -> Unit
+    onGoBackClick: () -> Unit,
+    onGoToQrScannerClick: () -> Unit
 ) {
     val historyGroceries by viewModel.historyGroceries.collectAsState(initial = emptyList())
 
@@ -55,6 +58,13 @@ fun HistoryScreen(
                         onClick = onGoBackClick
                     ) {
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.go_back_btn))
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = onGoToQrScannerClick
+                    ) {
+                        Icon(Icons.Default.QrCode, stringResource(R.string.go_to_history_btn))
                     }
                 }
             )
