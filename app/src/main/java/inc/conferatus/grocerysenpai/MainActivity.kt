@@ -24,7 +24,7 @@ import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Composable
-    fun GrocerySenpaiScreen() {
+    fun ScreenRouter() {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    GrocerySenpaiScreen()
+                    ScreenRouter()
                 }
             }
         }
