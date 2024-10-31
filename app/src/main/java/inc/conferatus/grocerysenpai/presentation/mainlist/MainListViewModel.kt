@@ -77,7 +77,7 @@ class MainListViewModel @Inject constructor(
         viewModelScope.launch {
             suggestedCategories = categoriesListSingleton.categories
                 .filterCategories(inputBeginning = textInput)
-                .sortCategories(limit = 7)
+                .sortCategories(limit = 7, input = textInput)
                 .map { it.name }
         }
     }
