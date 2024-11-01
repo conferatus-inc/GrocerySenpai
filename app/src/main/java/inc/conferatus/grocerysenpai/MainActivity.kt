@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 HistoryScreen(
                     viewModel = historyViewModel,
                     onGoBackClick = { navController.navigate("main")},
-                    onGoToQrScannerClick = { /*todo*/ }
+                    onGoToQrScannerClick = { navController.navigate("qrScanner") }
                 )
             }
 
