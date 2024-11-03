@@ -30,7 +30,7 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.model.util.HistoryGroceriesUtils.Companion.groupByDateDescending
-import inc.conferatus.grocerysenpai.presentation.history.component.HistoryNoItemsTextComponent
+import inc.conferatus.grocerysenpai.presentation.common.component.OnEmptyMessageComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.HistoryEntryComponent
 import java.time.format.DateTimeFormatter
 
@@ -70,13 +70,18 @@ fun HistoryScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn (
-            modifier = Modifier
-                .padding(innerPadding)
-                .animateContentSize()
-        ){
-            historyGroceries.groupByDateDescending().forEach {
-                pair ->
+        if (historyGroceries.isEmpty()) {
+            OnEmptyMessageComponent(
+                text = stringResource(R.string.history_no_items_text),
+                modifier = Modifier.padding(innerPadding)
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .animateContentSize()
+            ) {
+                historyGroceries.groupByDateDescending().forEach { pair ->
                     item(pair.first) {
                         Text(text = pair.first.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")))
                     }
@@ -91,6 +96,7 @@ fun HistoryScreen(
                             modifier = Modifier.animateItemPlacement()
                         )
                     }
+                }
             }
         }
 
