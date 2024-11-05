@@ -6,5 +6,10 @@ import androidx.compose.runtime.Composable
 fun QrScannerScreen(
     viewModel: QrScannerViewModel,
 ) {
-    GetQRCodeExample()
+    GetQRCodeExample(
+        onScanned = { _ -> true },
+        onErrorChecking = {},
+        onErrorScanning = {},
+        onSuccess = {}
+    )
 }

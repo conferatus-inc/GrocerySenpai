@@ -9,22 +9,30 @@ import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
 
 @Composable
-fun GetQRCodeExample() {
-    var input = remember { mutableStateOf("") }
-    val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanQRCode()) { result ->
-        when (result) {
-            is QRResult.QRSuccess -> {
-                input.value = result.content.rawValue.toString()
+fun GetQRCodeExample(
+    onScanned: (String) -> Boolean,
+    onSuccess: @Composable () -> Unit,
+    onErrorScanning: @Composable () -> Unit,
+    onErrorChecking: @Composable () -> Unit
+) {
+    var func: @Composable () -> Unit = {}
 
-                // TODO AAAAAAAAAAAAAAAAAAAAAAAa
+    val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanQRCode()) { result ->
+        func = when (result) {
+            is QRResult.QRSuccess -> {
+                val tmp = onScanned(result.content.rawValue.toString())
+                if (tmp) onSuccess else onErrorChecking
             }
 
-            else -> {}
+            else -> {
+                onErrorScanning
+            }
         }
     }
+
+    func()
+
     SideEffect {
         scanQrCodeLauncher.launch(null)
     }
-
-
 }
