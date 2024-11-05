@@ -1,8 +1,6 @@
 package inc.conferatus.grocerysenpai.presentation.qrscanner
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +15,8 @@ fun GetQRCodeExample() {
         when (result) {
             is QRResult.QRSuccess -> {
                 input.value = result.content.rawValue.toString()
+
+                // TODO AAAAAAAAAAAAAAAAAAAAAAAa
             }
 
             else -> {}
@@ -25,4 +25,6 @@ fun GetQRCodeExample() {
     SideEffect {
         scanQrCodeLauncher.launch(null)
     }
+
+
 }

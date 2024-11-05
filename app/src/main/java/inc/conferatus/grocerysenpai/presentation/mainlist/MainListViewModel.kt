@@ -117,7 +117,18 @@ class MainListViewModel @Inject constructor(
                 val id = api.postTask(historyDto)
                 val res = api.getTask(id)
                 suggestedProds = res.items
-            } catch (e: Exception) {suggestedProds = listOf(SuggestedItemDto(e.message!!, ""))
+            } catch (e: Exception) {
+                suggestedProds = listOf(SuggestedItemDto(e.message!!, ""))
+            }
+        }
+    }
+
+    public fun getByQr(data: String) {
+        viewModelScope.launch {
+            try {
+                val products = api.getQrData(data)
+            } catch (e: Exception) {
+                suggestedProds = listOf(SuggestedItemDto(e.message!!, ""))
             }
         }
     }

@@ -1,12 +1,10 @@
 package inc.conferatus.grocerysenpai.presentation.mainlist
 
 import retrofit2.http.Body
-import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.concurrent.Flow
 
 interface ApiService {
     @POST("recommendations")
@@ -14,4 +12,7 @@ interface ApiService {
 
     @GET("result/{taskId}?")
     suspend fun getTask(@Path("taskId") idx: Int, @Query("limit") limit: Int = 15): SuggestionsDto
+
+    @GET("api/qr_code/{raw_qr}")
+    suspend fun getQrData(@Path("raw_qr") qrData: String): ProductsDto
 }
