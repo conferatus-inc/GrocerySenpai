@@ -30,9 +30,9 @@ fun GetQRCodeExample(
         }
     }
 
-    func()
-
     SideEffect {
         scanQrCodeLauncher.launch(null)
     }
+
+    func()
 }
