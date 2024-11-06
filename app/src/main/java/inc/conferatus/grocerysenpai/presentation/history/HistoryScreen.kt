@@ -1,19 +1,13 @@
 package inc.conferatus.grocerysenpai.presentation.mainlist
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,8 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.model.util.HistoryGroceriesUtils.Companion.groupByDateDescending
 import inc.conferatus.grocerysenpai.presentation.common.component.OnEmptyMessageComponent
@@ -83,7 +77,10 @@ fun HistoryScreen(
             ) {
                 historyGroceries.groupByDateDescending().forEach { pair ->
                     item(pair.first) {
-                        Text(text = pair.first.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")))
+                        Text(
+                            text = pair.first.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        )
                     }
 
                     items(pair.second) {
