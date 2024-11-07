@@ -17,7 +17,7 @@ import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
-import inc.conferatus.grocerysenpai.presentation.qrscanner.QrScannerScreen
+import inc.conferatus.grocerysenpai.presentation.qrscanner.GetQRCodeExample
 import inc.conferatus.grocerysenpai.presentation.qrscanner.QrScannerViewModel
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 
@@ -50,9 +50,18 @@ class MainActivity : ComponentActivity() {
             composable(route = "qrScanner") {
                 /*todo*/
                 val qrScannerViewModel: QrScannerViewModel by viewModels()
-                QrScannerScreen(
+                val historyViewModel: HistoryViewModel by viewModels()
+//                val mainListViewModel: MainListViewModel by viewModels()
+                GetQRCodeExample(
                     viewModel = qrScannerViewModel,
-                    /*...*/
+                    onScanned = qrScannerViewModel::sendRequest,
+//                    onScanned = {  },
+                    onSuccess = {},
+                    onErrorScanning = {},
+                    save2 = historyViewModel::addMyItem,
+                    save = historyViewModel::addMyItem,
+                    check = historyViewModel::addMyItem,
+                    onDone = { navController.navigate("history") }
                 )
             }
 
