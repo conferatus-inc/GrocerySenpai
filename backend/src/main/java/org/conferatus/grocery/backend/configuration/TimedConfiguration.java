@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.configuration;
+package org.conferatus.grocery.backend.configuration;
 
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;

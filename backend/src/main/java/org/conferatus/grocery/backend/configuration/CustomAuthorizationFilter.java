@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.configuration;
+package org.conferatus.grocery.backend.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
