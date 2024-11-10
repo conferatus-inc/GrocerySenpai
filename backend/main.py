@@ -189,7 +189,7 @@ class QrCodeResolver:
     def __init__(self):
         print("creating")
         options = ChromeOptions()
-        # options.add_argument("--headless=new")
+        options.add_argument("--headless=new")
         self.driver = webdriver.Chrome(options=options)
         self.driver.get('https://proverkacheka.com/')
         self.rawQrCodeTab = self.driver.find_element(By.XPATH, "//ul[@class='b-checkform_nav nav nav-tabs']/li[4]")
