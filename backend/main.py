@@ -160,9 +160,16 @@ def getProducts(raw_qr_code, browser_driver, text_field, button_element):
         .perform()
     text_field.clear()
     text_field.send_keys(raw_qr_code)
-    time.sleep(0.4)
+    text_field.click()
+    time.sleep(0.5)
+    button_element = \
+        browser_driver.find_element(By.XPATH,
+                                    "//div[@class='b-checkform_tab-qrraw tab-pane fade active in']//div[@class='b-checkform_btn col-sm-12']"
+                                    "/button[@class='b-checkform_btn-send btn btn-primary btn-sm pull-right']")
     button_element.click()
-    time.sleep(2)
+    time.sleep(1)
+    button_element.click()
+    time.sleep(1.5)
     products = browser_driver.find_elements(By.XPATH, "//div[@class='b-check_place']//tr[@class='b-check_item']")
     date = browser_driver.find_element(By.XPATH, "//div[@class='b-check_place']//tr[5]/td").text
     product_list = []
