@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import inc.conferatus.grocerysenpai.api.ProductsApiService
 import inc.conferatus.grocerysenpai.model.CategoriesListSingleton
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
@@ -95,12 +96,12 @@ class MainListViewModel @Inject constructor(
 
         // todo это вообще синглтон будет
         private const val BASE_URL = "http://localhost:8887"
-        val api: ApiService by lazy {
+        val api: ProductsApiService by lazy {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-            retrofit.create(ApiService::class.java)
+            retrofit.create(ProductsApiService::class.java)
         }
     }
 
@@ -111,22 +112,23 @@ class MainListViewModel @Inject constructor(
 
     var suggestedProds: List<SuggestedItemDto> by mutableStateOf(emptyList()); private set
 
+    // TODO
     public fun getSuggested(historyDto: SendHistoryDto) {
-        viewModelScope.launch {
-            try {
-                val id = api.postTask(historyDto)
-                val res = api.getTask(id)
-                suggestedProds = res.items
-            } catch (e: Exception) {
-//                suggestedProds = listOf(SuggestedItemDto(e.message!!, ""))
-                suggestedProds = listOf(
-                    SuggestedItemDto(
-                        "Хлеб",
-                        DateTimeFormatter.ofPattern("dd MMMM yyyy").format(ZonedDateTime.now())
-                    )
-                )
-            }
-        }
+//        viewModelScope.launch {
+//            try {
+//                val id = api.postTask(historyDto)
+//                val res = api.getTask(id)
+//                suggestedProds = res.items
+//            } catch (e: Exception) {
+////                suggestedProds = listOf(SuggestedItemDto(e.message!!, ""))
+//                suggestedProds = listOf(
+//                    SuggestedItemDto(
+//                        "Хлеб",
+//                        DateTimeFormatter.ofPattern("dd MMMM yyyy").format(ZonedDateTime.now())
+//                    )
+//                )
+//            }
+//        }
     }
 
 //    public fun getByQr(data: String) {
