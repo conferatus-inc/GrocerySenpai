@@ -116,8 +116,7 @@ txt = """1  Ананасы
 109  Шоколад
 110  Шпинат
 111  Энергетический напиток
-112  Яблоки
-""".split("\n")
+112  Яблоки""".split("\n")
 categories = list(map(lambda k: " ".join(k.split()[1:]), txt))
 print(categories)
 
