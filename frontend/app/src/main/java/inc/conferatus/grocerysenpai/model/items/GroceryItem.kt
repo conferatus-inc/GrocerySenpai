@@ -1,6 +1,6 @@
 package inc.conferatus.grocerysenpai.model.items
 
-import inc.conferatus.grocerysenpai.presentation.mainlist.ProductDto
+import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductDto
 import java.time.ZonedDateTime
 
 data class GroceryItem(
@@ -11,16 +11,16 @@ data class GroceryItem(
     val amountPostfix: String,
     val bought: ZonedDateTime? = null
 ) {
-    constructor(productDto: ProductDto) :
+    constructor(qrProductDto: QrProductDto) :
             this(
                 (53245..624574252).random(),
-                CategoryItem((53245..624574252).random(), productDto.category)
+                CategoryItem((53245..624574252).random(), qrProductDto.category)
 //                xdd ?: CategoryItem(
 //                    (53245..624574252).random(),
 //                    "Чай"
 //                ), ""
                 , "",
-                productDto.amount, "", ZonedDateTime.now()
+                qrProductDto.amount, "", ZonedDateTime.now()
             )
 
 }

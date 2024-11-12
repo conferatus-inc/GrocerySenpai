@@ -1,7 +1,7 @@
 package inc.conferatus.grocerysenpai.presentation.qrscanner
 
 import androidx.lifecycle.ViewModel
-import inc.conferatus.grocerysenpai.presentation.mainlist.ProductsDto
+import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
 import javax.inject.Inject
 
 class QrScannerViewModel @Inject constructor(
@@ -19,7 +19,7 @@ class QrScannerViewModel @Inject constructor(
 //        }
 //    }
 
-    fun sendRequest(str: String): ProductsDto {
+    fun sendRequest(str: String): QrProductsDto {
 //        println("XDDXDD")
 //        println(str)
 //        viewModelScope.launch {
@@ -31,6 +31,6 @@ class QrScannerViewModel @Inject constructor(
 //        }
 //        println(lastScanResult.toString())
 //        return lastScanResult ?: ProductsDto(emptyList(), "")
-        return ProductsDto(emptyList(), "")
+        return QrProductsDto(emptyList(), "")
     }
 }

@@ -1,5 +1,7 @@
 package inc.conferatus.grocerysenpai.presentation.mainlist
 
+import java.util.Date
+
 data class SuggestedItemDto(
     val category: String,
     val nextBuy: String
@@ -18,12 +20,35 @@ data class SuggestionsDto(
     val items: List<SuggestedItemDto>
 )
 
-data class ProductDto(
+data class QrProductDto(
     val category: String,
-    val amount: Int
+    val amount: Int,
+)
+
+data class QrProductsDto(
+    val products: List<QrProductDto>,
+    val date: String,
 )
 
 data class ProductsDto(
     val products: List<ProductDto>,
-    val date: String
 )
+
+data class ProductDto(
+    val id: Long? = null,
+    val category: String,
+    var boughtOn: Date,
+    var isActive: Boolean,
+    val user: SimpleUserDto? = null,
+)
+
+data class SimpleUserDto(
+    val id: Long,
+    val username: String,
+)
+
+enum class Role {
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_ROOT,
+}

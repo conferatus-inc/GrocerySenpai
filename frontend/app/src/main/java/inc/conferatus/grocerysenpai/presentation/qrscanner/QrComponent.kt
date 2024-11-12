@@ -6,7 +6,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
-import inc.conferatus.grocerysenpai.presentation.mainlist.ProductsDto
+import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.reflect.KFunction1
@@ -14,7 +14,7 @@ import kotlin.reflect.KFunction1
 @Composable
 fun GetQRCodeExample(
     viewModel: QrScannerViewModel,
-    onScanned: (String) -> ProductsDto,
+    onScanned: (String) -> QrProductsDto,
     onSuccess: @Composable () -> Unit,
     onErrorScanning: @Composable () -> Unit,
     save2: (GroceryItem) -> Unit,
@@ -29,6 +29,7 @@ fun GetQRCodeExample(
             is QRResult.QRSuccess -> {
                 input.value = result.content.rawValue.toString()
                 println(input.value)
+
 //                var products = Stack<ProductDto>()
 //                products.push(ProductDto("Вода", 1))
 //                products.push(ProductDto("Вода", 2))
@@ -54,7 +55,7 @@ fun GetQRCodeExample(
 //                save2(groceryItem)
 //                save(groceryItem)
                 val tmp = onScanned(result.content.rawValue.toString())
-                tmp.products.forEach { save(GroceryItem(it, xdd)) }
+                tmp.products.forEach { save(GroceryItem(it)) }
 
 //
 //                onSuccess
