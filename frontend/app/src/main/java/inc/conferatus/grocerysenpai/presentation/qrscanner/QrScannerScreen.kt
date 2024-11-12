@@ -6,6 +6,7 @@ import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
 import kotlin.reflect.KFunction1
 
 @Composable
+@Deprecated(message = "Больше не используем")
 fun QrScannerScreen(
     viewModel: QrScannerViewModel,
     onScanned: (String) -> QrProductsDto,

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
 import javax.inject.Inject
 
+@Deprecated(message = "Больше не используем")
 class QrScannerViewModel @Inject constructor(
 ) : ViewModel() {
 

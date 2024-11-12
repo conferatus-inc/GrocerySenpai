@@ -1,8 +1,8 @@
 package inc.conferatus.grocerysenpai.presentation.qrscanner
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
@@ -12,6 +12,7 @@ import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.reflect.KFunction1
 
 @Composable
+@Deprecated(message = "Больше не используем")
 fun GetQRCodeExample(
     viewModel: QrScannerViewModel,
     onScanned: (String) -> QrProductsDto,
@@ -24,6 +25,7 @@ fun GetQRCodeExample(
 ) {
     var flag = true
     var input = remember { mutableStateOf("") }
+
     val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanQRCode()) { result ->
         when (result) {
             is QRResult.QRSuccess -> {
@@ -54,8 +56,8 @@ fun GetQRCodeExample(
 //                println(xdd)
 //                save2(groceryItem)
 //                save(groceryItem)
-                val tmp = onScanned(result.content.rawValue.toString())
-                tmp.products.forEach { save(GroceryItem(it)) }
+//                val tmp = onScanned(result.content.rawValue.toString())
+//                tmp.products.forEach { save(GroceryItem(it)) }
 
 //
 //                onSuccess
@@ -67,46 +69,13 @@ fun GetQRCodeExample(
             else -> {}
         }
     }
+    Button(onClick = { scanQrCodeLauncher.launch(null) }) {
 
-//    Text(text = input.value)
-//    if (input.value == "") {
-//        println(xdd)
-    if (flag) {
-        SideEffect {
-            scanQrCodeLauncher.launch(null)
-            flag = false
-        }
     }
-//        Button(onClick = onDone) {
+//    if (flag) {
+//        SideEffect {
+//            scanQrCodeLauncher.launch(null)
+//            flag = false
 //        }
 //    }
-//    Text(text = result2)
-//    var func: @Composable () -> Unit = {}
-
-//    val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanQRCode()) { result ->
-//        when (result) {
-//            is QRResult.QRSuccess -> {
-//                println(result.content.rawValue.toString())
-//                println("AAAAAAAAAAAAAAAAAAAAAAAAAA")
-//                val tmp = onScanned(result.content.rawValue.toString())
-//                tmp.products.forEach { save(GroceryItem(it, xdd)) }
-////                save(tmp)
-//
-//                onSuccess
-//            }
-//
-//            else -> {
-//                println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-////                onErrorScanning
-//            }
-//        }
-//        onDone()
-//    }
-//
-//    SideEffect {
-////        println("ABOBA")
-//        scanQrCodeLauncher.launch(null)
-//    }
-//
-////    func()
 }
