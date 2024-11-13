@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
-import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
+import inc.conferatus.grocerysenpai.api.QrProductsDto
+import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
+import java.time.ZonedDateTime
 import kotlin.reflect.KFunction1
 
 @Composable
@@ -31,6 +33,11 @@ fun GetQRCodeExample(
             is QRResult.QRSuccess -> {
                 input.value = result.content.rawValue.toString()
                 println(input.value)
+
+//                save2(GroceryItem((53245..624574252).random(), CategoryItem(13, "Газировка"), "", 1, "", ZonedDateTime.now()))
+//                save2(GroceryItem((53245..624574252).random(), CategoryItem(31, "Лимонад"), "", 1, "", ZonedDateTime.now()))
+//                save2(GroceryItem((53245..624574252).random(), CategoryItem(30, "Лимонад"), "", 1, "", ZonedDateTime.now()))
+//                save2(GroceryItem((53245..624574252).random(), CategoryItem(74, "Лосось"), "", 1, "", ZonedDateTime.now()))
 
 //                var products = Stack<ProductDto>()
 //                products.push(ProductDto("Вода", 1))

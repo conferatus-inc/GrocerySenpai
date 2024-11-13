@@ -1,6 +1,5 @@
 package inc.conferatus.grocerysenpai.api
 
-import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 

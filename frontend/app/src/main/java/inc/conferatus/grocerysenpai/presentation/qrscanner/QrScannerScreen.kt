@@ -2,7 +2,7 @@ package inc.conferatus.grocerysenpai.presentation.qrscanner
 
 import androidx.compose.runtime.Composable
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
-import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
+import inc.conferatus.grocerysenpai.api.QrProductsDto
 import kotlin.reflect.KFunction1
 
 @Composable

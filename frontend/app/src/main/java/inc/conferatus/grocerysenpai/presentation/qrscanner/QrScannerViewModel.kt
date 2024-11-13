@@ -1,7 +1,7 @@
 package inc.conferatus.grocerysenpai.presentation.qrscanner
 
 import androidx.lifecycle.ViewModel
-import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductsDto
+import inc.conferatus.grocerysenpai.api.QrProductsDto
 import javax.inject.Inject
 
 @Deprecated(message = "Больше не используем")

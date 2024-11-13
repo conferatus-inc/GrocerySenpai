@@ -16,10 +16,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,9 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.presentation.common.component.EntryComponent
-import inc.conferatus.grocerysenpai.presentation.common.component.OnEmptyMessageComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainItemTextInputComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainListEntryComponent
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 
 //import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -44,12 +43,7 @@ fun MainListScreen(
     onGoToHistoryClick: () -> Unit
 ) {
     val currentGroceries by viewModel.currentGroceries.collectAsState(initial = emptyList())
-
-    val suggestions by viewModel.historyConvertedToSend.collectAsState(initial = emptyList())
-
-    SideEffect {
-        viewModel.getSuggested(SendHistoryDto(items = suggestions))
-    }
+    val historyGroceries by viewModel.historyGroceries.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -114,10 +108,19 @@ fun MainListScreen(
                 )
             }
 
-            items(viewModel.suggestedProds) {
+            // tmp
+            item {
+                Button(
+                    onClick = { viewModel.genFakes() }
+                ) {
+                    Text(text = "fakes")
+                }
+            }
+
+            items(viewModel.getSuggested(historyGroceries)) {
                 EntryComponent(
                     mainText = it.category,
-                    secondaryText = it.nextBuy,
+                    secondaryText = "%d days before next buy".format(ZonedDateTime.now().until(it.nextBuy, ChronoUnit.DAYS)),
                     amountText = "",
 //                    onDoneButton = { /*TODO*/ },
 //                    onRemoveButton = { /*TODO*/ })

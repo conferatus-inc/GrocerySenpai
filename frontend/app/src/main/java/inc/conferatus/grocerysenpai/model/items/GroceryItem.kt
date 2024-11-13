@@ -1,6 +1,6 @@
 package inc.conferatus.grocerysenpai.model.items
 
-import inc.conferatus.grocerysenpai.presentation.mainlist.QrProductDto
+import inc.conferatus.grocerysenpai.api.QrProductDto
 import java.time.ZonedDateTime
 
 data class GroceryItem(

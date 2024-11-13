@@ -1,6 +1,5 @@
 package inc.conferatus.grocerysenpai.api
 
-import inc.conferatus.grocerysenpai.presentation.mainlist.Role
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST

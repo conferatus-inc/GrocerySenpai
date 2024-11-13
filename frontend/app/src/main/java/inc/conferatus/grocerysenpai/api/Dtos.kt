@@ -1,10 +1,11 @@
-package inc.conferatus.grocerysenpai.presentation.mainlist
+package inc.conferatus.grocerysenpai.api
 
+import java.time.ZonedDateTime
 import java.util.Date
 
 data class SuggestedItemDto(
     val category: String,
-    val nextBuy: String
+    val nextBuy: ZonedDateTime
 )
 
 data class BoughtItemDto(

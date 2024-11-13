@@ -6,19 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import inc.conferatus.grocerysenpai.api.ProductsApiService
+import inc.conferatus.grocerysenpai.api.SuggestedItemDto
 import inc.conferatus.grocerysenpai.model.CategoriesListSingleton
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
 import inc.conferatus.grocerysenpai.model.items.GroceryItem
+import inc.conferatus.grocerysenpai.model.predict
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.byName
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.filterCategories
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +26,7 @@ class MainListViewModel @Inject constructor(
     val categoriesListSingleton: CategoriesListSingleton
 ) : ViewModel() {
     val currentGroceries = groceryRepository.getCurrentGroceriesStream()
+    val historyGroceries = groceryRepository.getHistoryGroceriesStream()
 
     var textInput by mutableStateOf(""); private set
     var isInputValidated by mutableStateOf(false); private set
@@ -86,50 +85,142 @@ class MainListViewModel @Inject constructor(
         }
     }
 
-    // todo move to utils
-    // и вообще все переписать чтобы нормально было
-    // временное решение за день до презы
+    data class BeforePredictor(
+        val category: CategoryItem,
+        val dayNumbers: List<Long>,
+        val earliestDay: ZonedDateTime
+    )
 
-    companion object {
-//        private val mapper = jacksonObjectMapper()
-        private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    data class AfterPredictor(
+        val category: CategoryItem,
+        val daysBeforeNextBuy: Long,
+        val earliestDay: ZonedDateTime
+    )
 
-        // todo это вообще синглтон будет
-        private const val BASE_URL = "http://localhost:8887"
-        val api: ProductsApiService by lazy {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            retrofit.create(ProductsApiService::class.java)
+    fun getSuggested(history: List<GroceryItem>) : List<SuggestedItemDto> {
+        return categoriesListSingleton.categories
+            .asSequence()
+            .map { category -> history.filter { it.category.name == category.name } }
+            .filter { it.isNotEmpty() }
+            .map { list ->
+                val earliestBuy = list.minOf { it.bought!! }
+                val days = list.map { earliestBuy.until(it.bought!!, ChronoUnit.DAYS) }
+                BeforePredictor(list[0].category, days, earliestBuy)
+            }
+            .map { AfterPredictor(it.category, predict(it.dayNumbers), it.earliestDay) }
+            .map { SuggestedItemDto(it.category.name, it.earliestDay.plusDays(it.daysBeforeNextBuy) ) }
+            .onEach { println(it) }
+            .toList()
+    }
+    
+    fun genFakes() {
+        viewModelScope.launch {
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Вода")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(5)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Вода")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(3)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Вода")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(1)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Хлеб")!!,
+                    "",
+                    3,
+                    "",
+                    ZonedDateTime.now().minusDays(14)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Хлеб")!!,
+                    "",
+                    3,
+                    "",
+                    ZonedDateTime.now().minusDays(9)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Хлеб")!!,
+                    "",
+                    3,
+                    "",
+                    ZonedDateTime.now().minusDays(7)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Хлеб")!!,
+                    "",
+                    3,
+                    "",
+                    ZonedDateTime.now().minusDays(6)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Хлеб")!!,
+                    "",
+                    3,
+                    "",
+                    ZonedDateTime.now().minusDays(1)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Лимонад")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(30)
+                )
+            )
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Лимонад")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(10)
+                )
+            )
         }
     }
 
-    // просто ужас
-    public val historyConvertedToSend = groceryRepository.getHistoryGroceriesStream()
-        .map { it.map {entry -> BoughtItemDto(category = entry.category.name, boughtOn = entry.bought!!.format(formatter))} }
-//        .map { SendHistoryDto(it) }
 
-    var suggestedProds: List<SuggestedItemDto> by mutableStateOf(emptyList()); private set
-
-    // TODO
-    public fun getSuggested(historyDto: SendHistoryDto) {
-//        viewModelScope.launch {
-//            try {
-//                val id = api.postTask(historyDto)
-//                val res = api.getTask(id)
-//                suggestedProds = res.items
-//            } catch (e: Exception) {
-////                suggestedProds = listOf(SuggestedItemDto(e.message!!, ""))
-//                suggestedProds = listOf(
-//                    SuggestedItemDto(
-//                        "Хлеб",
-//                        DateTimeFormatter.ofPattern("dd MMMM yyyy").format(ZonedDateTime.now())
-//                    )
-//                )
-//            }
-//        }
-    }
 
 //    public fun getByQr(data: String) {
 //        viewModelScope.launch {
