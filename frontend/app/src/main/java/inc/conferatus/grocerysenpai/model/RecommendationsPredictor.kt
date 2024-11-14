@@ -3,7 +3,7 @@ package inc.conferatus.grocerysenpai.model
 import org.apache.commons.math3.stat.regression.SimpleRegression
 import kotlin.math.max
 
-const val THRESHOLD = 0.5
+const val THRESHOLD = 0.9
 
 fun predict(dayNumbers: List<Long>): Long {
     val regression = SimpleRegression()
@@ -23,7 +23,7 @@ fun predict(dayNumbers: List<Long>): Long {
     }
 
     var nextDay = iterDay + 1
-    while (regression.predict(nextDay.toDouble()) < currBuys + 1) {
+    while (regression.predict(nextDay.toDouble()) < currBuys + THRESHOLD) {
         nextDay++
     }
 

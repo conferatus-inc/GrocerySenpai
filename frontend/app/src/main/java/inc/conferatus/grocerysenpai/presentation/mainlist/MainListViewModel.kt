@@ -204,9 +204,10 @@ class MainListViewModel @Inject constructor(
                     "",
                     1,
                     "",
-                    ZonedDateTime.now().minusDays(30)
+                    ZonedDateTime.now().minusDays(58)
                 )
             )
+
             groceryRepository.insertGrocery(
                 GroceryItem(
                     (53245..624574252).random(),
@@ -214,7 +215,141 @@ class MainListViewModel @Inject constructor(
                     "",
                     1,
                     "",
+                    ZonedDateTime.now().minusDays(29)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Лимонад")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(80)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Лимонад")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(5)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Пиво")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(29)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Пиво")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(24)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Пиво")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(18)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Пиво")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(12)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Пиво")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(7)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Пиво")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(2)
+                )
+            )
+
+
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Сыр")!!,
+                    "",
+                    1,
+                    "",
                     ZonedDateTime.now().minusDays(10)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Сыр")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(13)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Сыр")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(16)
+                )
+            )
+
+            groceryRepository.insertGrocery(
+                GroceryItem(
+                    (53245..624574252).random(),
+                    categoriesListSingleton.categories.byName("Сыр")!!,
+                    "",
+                    1,
+                    "",
+                    ZonedDateTime.now().minusDays(19)
                 )
             )
         }
