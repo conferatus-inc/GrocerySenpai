@@ -75,24 +75,26 @@ fun HistoryScreen(
                     .padding(innerPadding)
                     .animateContentSize()
             ) {
-                historyGroceries.groupByDateDescending().forEach { pair ->
-                    item(pair.first) {
-                        Text(
-                            text = pair.first.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                    }
+                historyGroceries.groupByDateDescending()
+                    .sortedByDescending { it.first }
+                    .forEach { pair ->
+                        item(pair.first) {
+                            Text(
+                                text = pair.first.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+                        }
 
-                    items(pair.second) {
-                        HistoryEntryComponent(
-                            mainText = it.category.name,
-                            secondaryText = it.description,
-                            amountText = "%d %s".format(it.amount, it.amountPostfix),
-                            onAddClick = { viewModel.addItem(it) },
-                            onRemoveClick = { viewModel.removeItem(it) },
-                            modifier = Modifier.animateItemPlacement()
-                        )
-                    }
+                        items(pair.second) {
+                            HistoryEntryComponent(
+                                mainText = it.category.name,
+                                secondaryText = it.description,
+                                amountText = "%d %s".format(it.amount, it.amountPostfix),
+                                onAddClick = { viewModel.addItem(it) },
+                                onRemoveClick = { viewModel.removeItem(it) },
+                                modifier = Modifier.animateItemPlacement()
+                            )
+                        }
                 }
             }
         }
