@@ -1,12 +1,15 @@
 package org.example.mainbackend.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.mainbackend.model.User;
+import org.example.mainbackend.repository.RoleRepository;
+import org.example.mainbackend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,12 +18,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class AccountServiceJava {
-    private final AppUserRepository userRepository;
+public class AccountService {
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final WeakHashMap<String, String> aTokenMap = new WeakHashMap<>();
-    private final WeakHashMap<String, AppUser> userCache = new WeakHashMap<>();
+    private final WeakHashMap<String, User> userCache = new WeakHashMap<>();
     private final Set<String> authURLs = new HashSet<>();
     private final YandexIdService yandexIdService;
 
