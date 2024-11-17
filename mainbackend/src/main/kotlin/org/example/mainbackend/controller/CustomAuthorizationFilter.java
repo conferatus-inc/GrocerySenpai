@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.example.mainbackend.exception.ServerExceptions.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RequiredArgsConstructor
@@ -108,9 +109,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 } catch (TokenExpiredException e) {
                     log.warn("Token expired {}", request.getHeader(AUTHORIZATION).substring("Bearer ".length()));
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.setStatus(TypicalServerExceptions.ACCESS_TOKEN_PROBLEM.status());
+                    response.setStatus(ACCESS_TOKEN_PROBLEM.status());
                     new ObjectMapper().writeValue(response.getOutputStream(),
-                            TypicalServerExceptions.ACCESS_TOKEN_PROBLEM.moreInfo("Token expired").getAnswer());
+                            ACCESS_TOKEN_PROBLEM.moreInfo("Token expired").getAnswer());
                 } catch (JWTVerificationException e) {
                     log.error("Error logging in {}", e.getMessage());
                     response.setHeader("error", e.getMessage());
