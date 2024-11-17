@@ -15,6 +15,7 @@ enum class ServerExceptions {
     ACCESS_TOKEN_PROBLEM(ServerException(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_PROBLEM")),
     USER_ALREADY_EXISTS(ServerException(HttpStatus.BAD_REQUEST, "USER_ALREADY_EXISTS")),
     ROLE_NOT_EXISTS(ServerException(HttpStatus.BAD_REQUEST, "ROLE_NOT_EXISTS")),
+    FORBIDDEN(ServerException(HttpStatus.FORBIDDEN, "FORBIDDEN")),
     ;
 
     private val serverException: ServerException
