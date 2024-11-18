@@ -24,9 +24,13 @@ data class User(
     val id: Long? = null,
     @Size(min = 5, message = "At least 5 characters")
     @Column(nullable = false)
-    val username: String,
+    var username: String,
+    @Column(nullable = false)
+    var accessToken: String,
+    @Column(nullable = false)
+    var refreshToken: String,
     @ManyToMany(fetch = FetchType.EAGER)
-    val roles: MutableSet<Role> = mutableSetOf(),
+    var roles: MutableSet<Role> = mutableSetOf(),
     @OneToMany(fetch = FetchType.EAGER)
     val products: MutableSet<Product> = mutableSetOf(),
 )
