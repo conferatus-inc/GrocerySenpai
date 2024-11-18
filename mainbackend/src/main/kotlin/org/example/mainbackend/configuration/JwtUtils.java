@@ -4,15 +4,18 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.RequiredArgsConstructor;
+import org.example.mainbackend.model.Role;
 import org.example.mainbackend.model.User;
+import org.example.mainbackend.service.AccountService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.yandex.shbr.ost.backend.security.appUser.AccountService;
 
 import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class JwtUtils {
     private final long accessTokenLifetime = 5*60*1000;
     private final long refreshTokenLifetime = 500*60*1000;
@@ -28,14 +31,14 @@ public class JwtUtils {
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenLifetime))
                 .withIssuer("access")
                 .withIssuedAt(new Date())
-                .withClaim("roles", user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
+                .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .sign(algorithm);
         String refreshToken = JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenLifetime))
                 .withIssuer("refresh")
                 .withIssuedAt(new Date())
-                .withClaim("roles", user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
+                .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .sign(algorithm);
         accountService.updateAccessToken(username, accessToken);
         accountService.updateRefreshToken(username, refreshToken);
