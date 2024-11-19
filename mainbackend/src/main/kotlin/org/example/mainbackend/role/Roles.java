@@ -2,6 +2,7 @@ package org.example.mainbackend.role;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.mainbackend.exception.ServerExceptions;
+import org.example.mainbackend.model.Role;
 import org.example.mainbackend.model.enums.RoleName;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,6 +76,9 @@ public class Roles {
         } else {
             mustBeAdmin();
         }
+    }
+    public static void greaterPermission(Set<Role> roles) {
+        greaterPermission(roles.stream().map(Role::getName).collect(Collectors.toList()));
     }
 
     public static void greaterPermission(RoleName role) {
