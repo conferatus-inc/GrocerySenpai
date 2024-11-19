@@ -16,6 +16,9 @@ enum class ServerExceptions {
     USER_ALREADY_EXISTS(ServerException(HttpStatus.BAD_REQUEST, "USER_ALREADY_EXISTS")),
     ROLE_NOT_EXISTS(ServerException(HttpStatus.BAD_REQUEST, "ROLE_NOT_EXISTS")),
     FORBIDDEN(ServerException(HttpStatus.FORBIDDEN, "FORBIDDEN")),
+    BAD_LOGIN(ServerException(HttpStatus.BAD_REQUEST, "BAD_LOGIN")),
+    USER_NOT_FOUND(ServerException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND")),
+    ABOBA(ServerException(HttpStatus.I_AM_A_TEAPOT, "ABOBA")),
     ;
 
     private val serverException: ServerException

@@ -78,7 +78,7 @@ public class Roles {
         }
     }
     public static void greaterPermission(Set<Role> roles) {
-        greaterPermission(roles.stream().map(Role::getName).collect(Collectors.toList()));
+        greaterPermission(roles.stream().map(Role::getName).toList());
     }
 
     public static void greaterPermission(RoleName role) {
