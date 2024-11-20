@@ -42,6 +42,10 @@ public class Roles {
         }
     }
 
+    public static boolean isUserRole(RoleName role) {
+        return basicRoles().contains(role);
+    }
+
 
     public static void mustBeRoot() {
         mustHaveRole(RoleName.ROLE_ROOT);

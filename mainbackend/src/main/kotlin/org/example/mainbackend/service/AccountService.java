@@ -69,18 +69,18 @@ public class AccountService {
     }
 
 
-    public User addRoleToUser(String userName, RoleName roleName) throws ResponseException {
+    public User addRoleToUser(String userName, RoleName roleName) {
         log.info("Start adding role {} to user {}", roleName, userName);
 
         var user = findUser(userName);
         if (user == null) {
             log.warn("User {} not found", userName);
-            throw new ResponseException(HttpStatus.NOT_FOUND, "User not found: " + userName);
+            ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("User not found: " + userName).throwException();
         }
         var role = roleRepository.findByName(roleName);
         if (role == null ) {
             log.warn("Role {} not found", roleName);
-            throw new ResponseException(HttpStatus.NOT_FOUND, "Role not found: " + roleName);
+            ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("Role not found: " + roleName).throwException();
         }
         log.info("Added role {} to user {}", roleName, userName);
         user.getRoles().add(role);
@@ -92,7 +92,7 @@ public class AccountService {
     public User addRoleToUser(Long id, RoleName addRole, RoleName removeRole) {
         var userO = userRepository.findById(id);
         if (userO.isEmpty()) {
-            USER_NOT_FOUND.throwException();
+            ServerExceptions.USER_NOT_FOUND.throwException();
         }
         var user = userO.get();
         if (addRole != null && Roles.isUserRole(addRole)) {
@@ -107,12 +107,11 @@ public class AccountService {
 
     public User getUser(String username) {
         log.info("Getting user {}", username);
-        Optional<User> user = findUser(username);
-        if (user.isPresent()) {
-            return user.get();
+        var user = findUser(username);
+        if (user == null) {
+            ServerExceptions.USER_NOT_FOUND.moreInfo("User " + username + " not found").throwException();
         }
-        USER_NOT_FOUND.moreInfo("User " + username + " not found").throwException();
-        throw new RuntimeException("WTF?!");
+        return user;
     }
 
     public UserLoginDTO login(String token) {
@@ -120,7 +119,7 @@ public class AccountService {
         long id = Long.parseLong(response.id());
         var userO = userRepository.findByUsername(Long.toString(id));
         if (userO == null) {
-            USER_NOT_FOUND.throwException();
+            ServerExceptions.USER_NOT_FOUND.throwException();
         }
         return new UserLoginDTO(response, userO);
     }
@@ -139,11 +138,11 @@ public class AccountService {
             }
             var roleFound = roleRepository.findByName(role);
             if (roleFound == null ) {
-                ROLE_NOT_EXISTS.throwException();
+                ServerExceptions.ROLE_NOT_EXISTS.throwException();
             }
             var userRole = roleRepository.findByName(RoleName.ROLE_USER);
             if (userRole == null) {
-                ROLE_NOT_EXISTS.moreInfo("ROLE_USER not exists").throwException();
+                ServerExceptions.ROLE_NOT_EXISTS.moreInfo("ROLE_USER not exists").throwException();
             }
             newUser.setRoles(Set.of(userRole, roleFound));
             newUser = userRepository.save(newUser);
@@ -166,18 +165,18 @@ public class AccountService {
     public static void checkUserName(String username) {
         if (username == null || username.isBlank()) {
             log.warn("Null or empty username");
-            BAD_LOGIN.moreInfo("There is no login").throwException();
+            ServerExceptions.BAD_LOGIN.moreInfo("There is no login").throwException();
         }
         if (!username.matches("(\\w)+")) {
             log.warn("Bad username {}", username);
-            BAD_LOGIN.moreInfo("Bad username. Username must contains" +
+            ServerExceptions.BAD_LOGIN.moreInfo("Bad username. Username must contains" +
                     "only digits letters").throwException();
         }
     }
 
-    public void deleteUser(String username) throws ResponseException {
+    public void deleteUser(String username) {
         if (username == null) {
-            ResponseException.throwResponse(HttpStatus.BAD_REQUEST, "There is no username");
+            ServerExceptions.BAD_REQUEST.moreInfo("There is no username").throwException();
         }
         User appUser = getUser(username);
         Roles.greaterPermission(appUser.getRoles());
@@ -209,7 +208,7 @@ public class AccountService {
 
     }
 
-    public String getRefreshToken(String username) throws ResponseException {
+    public String getRefreshToken(String username) {
         log.warn("get user refresh: {}", getUser(username));
         log.warn("get user {} accessToken", username);
         return getUser(username).getRefreshToken();
@@ -230,7 +229,7 @@ public class AccountService {
 
     public User addUser(RequestUser requestUser) {
         if (userRepository.existsByUsername(requestUser.username())) {
-            USER_ALREADY_EXISTS.throwException();
+            ServerExceptions.USER_ALREADY_EXISTS.throwException();
         }
         User appUser = new User();
         appUser.setUsername(requestUser.username());
