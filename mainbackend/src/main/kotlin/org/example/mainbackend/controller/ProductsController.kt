@@ -26,6 +26,6 @@ class ProductsController(
 
     @GetMapping
     fun getProducts(principal: Principal): ProductsDto {
-        return ProductsDto(productsService.fundByUser(principal.name).map { ProductDto(it) })
+        return ProductsDto(productsService.findByUser(principal.name).map { ProductDto(it) })
     }
 }

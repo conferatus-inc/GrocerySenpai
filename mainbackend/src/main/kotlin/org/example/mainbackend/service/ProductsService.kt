@@ -21,7 +21,7 @@ class ProductsService(
         return productRepository.findAll()
     }
 
-    fun fundByUser(username: String): List<Product> {
+    fun findByUser(username: String): List<Product> {
         return productRepository.findProductsByUser(accountService.getUser(username))
     }
 }
