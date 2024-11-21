@@ -19,7 +19,7 @@ data class Product(
     val boughtOn: OffsetDateTime,
     //    @JoinColumn(nullable = false)
     @ManyToOne
-    val user: User?,
+    var user: User?,
 ) {
     constructor(productDto: ProductDto) : this(
         category = productDto.category,

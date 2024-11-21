@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -18,12 +19,13 @@ class ProductsController(
     @PostMapping
     fun addProduct(
         @RequestBody purchase: ProductDto,
+        principal: Principal,
     ): ProductDto {
-        return ProductDto(productsService.addProduct(Product(purchase)))
+        return ProductDto(productsService.addProductToUser(Product(purchase), principal.name))
     }
 
     @GetMapping
-    fun getProducts(): ProductsDto {
-        return ProductsDto(productsService.findAll().map { ProductDto(it) })
+    fun getProducts(principal: Principal): ProductsDto {
+        return ProductsDto(productsService.fundByUser(principal.name).map { ProductDto(it) })
     }
 }
