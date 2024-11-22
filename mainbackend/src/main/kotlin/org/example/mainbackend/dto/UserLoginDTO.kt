@@ -1,9 +1,9 @@
-package org.example.mainbackend.dto;
+package org.example.mainbackend.dto
 
+import org.example.mainbackend.model.User
+import org.example.mainbackend.service.YandexIdService
 
-import org.example.mainbackend.model.User;
-import org.example.mainbackend.service.YandexIdService;
-
-public record UserLoginDTO(YandexIdService.ResponseYandexId responseYandexId,
-                           User appUser) {
-}
+data class UserLoginDTO(
+    val responseYandexId: YandexIdService.ResponseYandexId,
+    val user: User,
+)

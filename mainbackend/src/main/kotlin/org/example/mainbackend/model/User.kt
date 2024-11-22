@@ -26,9 +26,9 @@ data class User(
     @Column(nullable = false)
     var username: String,
     @Column(nullable = false)
-    var accessToken: String,
+    var accessToken: String? = null,
     @Column(nullable = false)
-    var refreshToken: String,
+    var refreshToken: String? = null,
     @ManyToMany(fetch = FetchType.EAGER)
     var roles: MutableSet<Role> = mutableSetOf(),
     @OneToMany(fetch = FetchType.EAGER)

@@ -1,306 +1,223 @@
-package org.example.mainbackend.controller;
+package org.example.mainbackend.controller
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-import org.example.mainbackend.configuration.JwtUtils;
-import org.example.mainbackend.dto.UserLoginDTO;
-import org.example.mainbackend.exception.ServerExceptions;
-import org.example.mainbackend.model.Role;
-import org.example.mainbackend.model.User;
-import org.example.mainbackend.model.enums.RoleName;
-import org.example.mainbackend.service.AccountService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
+import com.auth0.jwt.exceptions.JWTVerificationException
+import com.auth0.jwt.exceptions.TokenExpiredException
+import com.auth0.jwt.interfaces.DecodedJWT
+import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import lombok.extern.slf4j.Slf4j
+import org.example.mainbackend.configuration.JwtUtils
+import org.example.mainbackend.exception.ServerExceptions
+import org.example.mainbackend.model.Role
+import org.example.mainbackend.model.enums.RoleName
+import org.example.mainbackend.service.AccountService
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import java.io.IOException
+import java.util.stream.Collectors
 
 @RestController
-@RequestMapping(path = "/api/accounts")
-@AllArgsConstructor
-@Slf4j
-//TODO: fix, delete or save
-public class AccountController {
-    private final AccountService accountService;
-
-    private final JwtUtils jwtUtils;
-
-    @GetMapping({"/users"})
-    public ResponseEntity<?> getUsers() {
-        return ResponseEntity.ok(accountService.getUsers());
+@RequestMapping(path = ["/api/accounts"])
+@Slf4j // TODO: fix, delete or save
+class AccountController(
+    private val accountService: AccountService,
+    private val jwtUtils: JwtUtils,
+) {
+    @GetMapping("/users")
+    fun findAllUsers(): ResponseEntity<*> {
+        return ResponseEntity.ok(accountService.findAllUsers())
     }
 
-    @GetMapping({"/users/info"})
-    public ResponseEntity<?> getUserInfo(@RequestBody UserNameForm form) {
-        return ResponseEntity.ok(accountService.getUser(form.username()));
-
+    @GetMapping("/users/info")
+    fun getUserInfo(
+        @RequestBody form: UserNameForm,
+    ): ResponseEntity<*> {
+        return ResponseEntity.ok(accountService.getUser(form.username))
     }
 
-
-    @GetMapping({"/roles"})
-    public ResponseEntity<List<Role>> getRoles() {
-        return ResponseEntity.ok(accountService.getRoles());
+    @GetMapping("/roles")
+    fun fundAllRoles(): ResponseEntity<MutableList<Role>> {
+        return ResponseEntity.ok(accountService.findAllRoles())
     }
 
-//    @GetMapping({"/clear/cache"})
-//    public ResponseEntity<?> clearCache() {
-//        accountService.clearCache();
-//        return ResponseEntity.ok("Cache was cleared");
-//    }
-
-    @PostMapping({"/users/addrole"})
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
-        return ResponseEntity.ok(accountService.addRoleToUser(form.username(), form.role()));
+    @PostMapping("/users/addrole")
+    fun addRoleToUser(
+        @RequestBody form: RoleToUserForm,
+    ): ResponseEntity<*> {
+        return ResponseEntity.ok(accountService.addRoleToUser(form.username, form.role))
     }
 
-//    @PostMapping({"roles/add"})
-//    public ResponseEntity<?> saveRole(@RequestBody Role role) {
-//        try {
-//            return ResponseEntity.ok(accountService.saveRole(role));
-//        } catch (ResponseException e) {
-//            return e.response();
-//        }
-//    }
-
-//    @PostMapping({"/roles/retrieve"})
-//    public ResponseEntity<?> deleteRoleFromUser(@RequestBody RoleToUserForm form) {
-//        try {
-//            return ResponseEntity.ok(accountService.deleteRoleFromUser(form.getUsername(), form.getRole()));
-//        } catch (ResponseException e) {
-//            return e.response();
-//        }
-//    }
-//
-//    @PostMapping({"/root/roles/delete", "/admin/roles/delete"})
-//    public ResponseEntity<?> deleteRole(@RequestBody RoleNameForm roleName) {
-//        try {
-//            accountService.deleteRole(roleName.getRole());
-//            return ResponseEntity.ok("Role " + roleName + " was deleted");
-//        } catch (ResponseException e) {
-//            return e.response();
-//        }
-//    }
-
-    @DeleteMapping({"/users/delete"})
-    public ResponseEntity<?> deleteUser(@RequestBody UserNameForm userName) {
-        accountService.deleteUser(userName.username());
-        return ResponseEntity.ok("Role " + userName + " was deleted");
+    @DeleteMapping("/users/delete")
+    fun deleteUser(
+        @RequestBody userName: UserNameForm,
+    ): ResponseEntity<*> {
+        accountService.deleteUser(userName.username)
+        return ResponseEntity.ok("Role $userName was deleted")
     }
-
-//    @GetMapping("/token/info")
-//    public void getInfo(HttpServletRequest request, HttpServletResponse response) {
-//        log.info("User trying to refresh token");
-//        String authorizationHeader = request.getHeader(AUTHORIZATION);
-//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-//            try {
-//                String access_token = authorizationHeader.substring("Bearer ".length());
-//                Algorithm algorithm = Algorithm.HMAC256(CustomSecurityConfig.secretWord.getBytes());
-//                JWTVerifier verifier = JWT.require(algorithm).build();
-//                DecodedJWT decodedJWT = verifier.verify(access_token);
-//                String username = decodedJWT.getSubject();
-//                AppUser user = accountService.getUser(username);
-//                String access_token1 = user.getAccess_token();
-//                if (!access_token1.equals(access_token)) {
-//                    ResponseException.throwResponse(HttpStatus.UNAUTHORIZED, "It's not current refresh token");
-//                }
-//
-//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                log.warn("User {} refresh own tokens", username);
-//                new ObjectMapper().writeValue(response.getOutputStream(),
-//                        Map.of("username", user.getUsername(),
-//                                "roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList())));
-//            } catch (ResponseException e) {
-//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                try {
-//                    new ObjectMapper().writeValue(response.getOutputStream(), new ResponseException.Response(e.httpStatus, e.reason));
-//                } catch (IOException ex) {
-//                    response.setStatus(500);
-//                }
-//                //return ResponseEntity.badRequest().body("There is no user");
-//            } catch (Exception e) {
-//                log.error("Error logging with {}", e.getMessage());
-//                response.setHeader("error", e.getMessage());
-//                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//                Map<String, String> error = new HashMap<>();
-//                error.put("error_message", e.getMessage());
-//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                try {
-//                    new ObjectMapper().writeValue(response.getOutputStream(),
-//                            error);
-//                } catch (IOException ex) {
-//                    response.setStatus(500);
-//                }
-//            }
-//        } else {
-//            log.info("NOT TOKEN AUTHENTICATION");
-//            response.setStatus(HttpStatus.BAD_REQUEST.value());
-//            Map<String, String> error = new HashMap<>();
-//            error.put("error_message", "NOT TOKEN AUTHENTICATION");
-//            error.put("status", response.getStatus() + "");
-//            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//            try {
-//                new ObjectMapper().writeValue(response.getOutputStream(),
-//                        error);
-//            } catch (IOException e) {
-//                response.setStatus(HttpStatus.BAD_REQUEST.value());
-//            }
-//
-//        }
-//    }
 
     @GetMapping("/token/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        log.info("User trying to logout");
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
+    fun logout(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+    ) {
+        log.info("User trying to logout")
+        val authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String refresh_token = authorizationHeader.substring("Bearer ".length());
-                DecodedJWT decodedJWT = jwtUtils.decodeJWT(refresh_token);
-                String username = decodedJWT.getSubject();
-                User user = accountService.getUser(username);
-                accountService.updateAccessToken(username, "");
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                log.warn("User {} refresh own tokens", username);
-                new ObjectMapper().writeValue(response.getOutputStream(),
-                        Map.of("Information", "logout",
-                                "roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()),
-                                "username", user.getUsername()));
-            } catch (IOException e) {
-                log.error("Error with logout {}", e.getMessage());
-                response.setHeader("error", e.getMessage());
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("error_message", e.getMessage());
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                val refreshToken = authorizationHeader.substring("Bearer ".length)
+                val decodedJWT = jwtUtils.decodeJWT(refreshToken)
+                val username = decodedJWT.subject
+                val user = accountService.getUser(username)
+                accountService.updateAccessToken(username, "")
+                response.contentType = MediaType.APPLICATION_JSON_VALUE
+                log.warn("User {} refresh own tokens", username)
+                ObjectMapper().writeValue(
+                    response.outputStream,
+                    mapOf(
+                        "Information" to "logout",
+                        "roles" to user.roles.stream().map(Role::name).collect(Collectors.toList()),
+                        "username" to user.username,
+                    ),
+                )
+            } catch (e: IOException) {
+                log.error("Error with logout {}", e.message)
+                response.setHeader("error", e.message)
+                response.status = HttpStatus.UNAUTHORIZED.value()
+                val error: MutableMap<String, String?> = HashMap()
+                error["error_message"] = e.message
+                response.contentType = MediaType.APPLICATION_JSON_VALUE
                 try {
-                    new ObjectMapper().writeValue(response.getOutputStream(),
-                            error);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    ObjectMapper().writeValue(
+                        response.outputStream,
+                        error,
+                    )
+                } catch (ex: IOException) {
+                    throw RuntimeException(ex)
                 }
             }
         } else {
-            log.info("NOT TOKEN AUTHENTICATION");
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            Map<String, String> error = new HashMap<>();
-            error.put("error_message", "NOT TOKEN AUTHENTICATION");
-            error.put("status", response.getStatus() + "");
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            log.info("NOT TOKEN AUTHENTICATION")
+            response.status = HttpStatus.BAD_REQUEST.value()
+            val error: MutableMap<String, String> = HashMap()
+            error["error_message"] = "NOT TOKEN AUTHENTICATION"
+            error["status"] = response.status.toString() + ""
+            response.contentType = MediaType.APPLICATION_JSON_VALUE
             try {
-                new ObjectMapper().writeValue(response.getOutputStream(),
-                        error);
-            } catch (IOException e) {
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                ObjectMapper().writeValue(
+                    response.outputStream,
+                    error,
+                )
+            } catch (e: IOException) {
+                response.status = HttpStatus.BAD_REQUEST.value()
             }
         }
     }
-
 
     @PostMapping("/token/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        log.info("User trying to refresh token");
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
+    fun refreshToken(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+    ) {
+        log.info("User trying to refresh token")
+        val authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String refresh_token = authorizationHeader.substring("Bearer ".length());
-                DecodedJWT decodedJWT = null;
+                val refreshToken = authorizationHeader.substring("Bearer ".length)
+                var decodedJWT: DecodedJWT? = null
                 try {
-                    decodedJWT = jwtUtils.decodeJWT(refresh_token);
+                    decodedJWT = jwtUtils.decodeJWT(refreshToken)
+                } catch (e: TokenExpiredException) {
+                    // TODO: добавить мб другие кэтчи, или обобщить по-другому
+                    ServerExceptions.REFRESH_TOKEN_EXPIRED.throwException()
+                } catch (e: JWTVerificationException) {
+                    log.error("Error refresh")
+                    ServerExceptions.BAD_REFRESH_TOKEN.throwException()
                 }
-                //TODO: добавить мб другие кэтчи, или обобщить по-другому
-                catch (TokenExpiredException e) {
-                    ServerExceptions.REFRESH_TOKEN_EXPIRED.throwException();
+                val username = decodedJWT!!.subject
+                val user = accountService.getUser(username)
+                val oldRefreshToken = user.refreshToken
+                if (oldRefreshToken != refreshToken) {
+                    ServerExceptions.NOT_CURRENT_REFRESH_TOKEN.moreInfo("NOT current refresh token").throwException()
                 }
-                catch (JWTVerificationException e) {
-                    log.error("Error refresh");
-                    ServerExceptions.BAD_REFRESH_TOKEN.throwException();
-                }
-                String username = decodedJWT.getSubject();
-                User user = accountService.getUser(username);
-                String oldRefreshToken = user.getRefreshToken();
-                if (!oldRefreshToken.equals(refresh_token)) {
-                    ServerExceptions.NOT_CURRENT_REFRESH_TOKEN.moreInfo("NOT current refresh token").throwException();
-                }
-                JwtUtils.Tokens tokens = jwtUtils.createTokens(user);
+                val tokens = jwtUtils.createTokens(user)
 
-                accountService.updateAccessToken(username, tokens.access_token());
-                accountService.updateRefreshToken(username, tokens.refresh_token());
-                response.setHeader("access_token", tokens.access_token());
-                response.setHeader("refresh_token", tokens.refresh_token());
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                log.warn("User {} refresh own tokens", username);
-                new ObjectMapper().writeValue(response.getOutputStream(),
-                        Map.of("access_token", tokens.access_token(),
-                                "refresh_token", tokens.refresh_token(),
-                                "roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()),
-                                "username", user.getUsername()));
-            } catch (IOException e) {
-                log.error("Error logging with {}", e.getMessage());
-                response.setHeader("error", e.getMessage());
-                response.setStatus(HttpStatus.FORBIDDEN.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("error_message", e.getMessage());
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                accountService.updateAccessToken(username, tokens.access_token)
+                accountService.updateRefreshToken(username, tokens.refresh_token)
+                response.setHeader("access_token", tokens.access_token)
+                response.setHeader("refresh_token", tokens.refresh_token)
+                response.contentType = MediaType.APPLICATION_JSON_VALUE
+                log.warn("User {} refresh own tokens", username)
+                ObjectMapper().writeValue(
+                    response.outputStream,
+                    mapOf(
+                        "access_token" to tokens.access_token,
+                        "refresh_token" to tokens.refresh_token,
+                        "roles" to user.roles.stream().map(Role::name).collect(Collectors.toList()),
+                        "username" to user.username,
+                    ),
+                )
+            } catch (e: IOException) {
+                log.error("Error logging with {}", e.message)
+                response.setHeader("error", e.message)
+                response.status = HttpStatus.FORBIDDEN.value()
+                val error: MutableMap<String, String?> = HashMap()
+                error["error_message"] = e.message
+                response.contentType = MediaType.APPLICATION_JSON_VALUE
                 try {
-                    new ObjectMapper().writeValue(response.getOutputStream(),
-                            error);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    ObjectMapper().writeValue(
+                        response.outputStream,
+                        error,
+                    )
+                } catch (ex: IOException) {
+                    throw RuntimeException(ex)
                 }
             }
         } else {
-            log.info("NOT TOKEN AUTHENTICATION");
-            response.setStatus(ServerExceptions.BAD_REFRESH_TOKEN.status());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            ServerExceptions.BAD_REFRESH_TOKEN.moreInfo("REFRESH TOKEN DOESN'T PROVIDED");
+            log.info("NOT TOKEN AUTHENTICATION")
+            response.status = ServerExceptions.BAD_REFRESH_TOKEN.status()
+            response.contentType = MediaType.APPLICATION_JSON_VALUE
+            ServerExceptions.BAD_REFRESH_TOKEN.moreInfo("REFRESH TOKEN DOESN'T PROVIDED")
         }
     }
 
-//    @PostMapping("/registry")
-//    public ResponseEntity<?> registry(@RequestHeader(value = "Authorization") String token,
-//                                      @RequestHeader(value = "role") String role) {
-//        AppUser res = accountService.createAppUser(token, Set.of(new Role(Roles.USER),
-//                new Role("ROLE_" + role.toUpperCase())));
-//        return ResponseEntity.ok(res);
-//    }
-
     @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestHeader(value = "Authorization", required = false) String token,
-                                   @RequestHeader(value = "role") RoleName role) {
-        UserLoginDTO userLoginDTO = accountService.login(token, role);
-        var yResponse = userLoginDTO.responseYandexId();
-        User user = userLoginDTO.appUser();
-        JwtUtils.Tokens tokens = jwtUtils.createTokens(user);
-        return ResponseEntity.ok(Map.of("access_token", tokens.access_token(),
-                "refresh_token", tokens.refresh_token(),
-                "roles", user.getRoles().stream().map(Role::getName).toList(),
-                "username", user.getUsername(),
-                "display_name", yResponse.display_name()
-        ));
+    fun login(
+        @RequestHeader(value = "Authorization", required = false) token: String?,
+        @RequestHeader(value = "role") role: RoleName?,
+    ): ResponseEntity<*> {
+        val userLoginDTO = accountService.login(token!!, role!!)
+        val yResponse = userLoginDTO.responseYandexId
+        val user = userLoginDTO.user
+        val tokens = jwtUtils.createTokens(user)
+        return ResponseEntity.ok(
+            mapOf(
+                "access_token" to tokens.access_token,
+                "refresh_token" to tokens.refresh_token,
+                "roles" to user.roles.stream().map(Role::name).toList(),
+                "username" to user.username,
+                "display_name" to yResponse.display_name,
+            ),
+        )
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
     }
 }
 
-record RoleNameForm(String role) {
-}
+data class RoleNameForm(val role: String)
 
-record UserNameForm(String username) {
-}
+data class UserNameForm(val username: String)
 
-record RoleToUserForm(String username, RoleName role) {
-}
+data class RoleToUserForm(val username: String, val role: RoleName)
