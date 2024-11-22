@@ -8,6 +8,8 @@ enum class ServerExceptions {
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED),
     ILLEGAL_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED),
     ILLEGAL_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED),
+    BAD_REFRESH_TOKEN(HttpStatus.BAD_REQUEST),
+    NOT_CURRENT_REFRESH_TOKEN(HttpStatus.FORBIDDEN),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED),
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST),
     BAD_REQUEST(HttpStatus.BAD_REQUEST),
@@ -19,6 +21,7 @@ enum class ServerExceptions {
     BAD_LOGIN(HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND),
     ABOBA(HttpStatus.I_AM_A_TEAPOT),
+    ILLEGAL_YANDEX_TOKEN(HttpStatus.BAD_REQUEST),
     ;
 
     private val serverException: ServerException
@@ -30,6 +33,7 @@ enum class ServerExceptions {
     constructor(httpStatus: HttpStatus, message: String) {
         serverException = ServerException(httpStatus, message)
     }
+
     constructor(httpStatus: HttpStatus) {
         serverException = ServerException(httpStatus, name)
     }

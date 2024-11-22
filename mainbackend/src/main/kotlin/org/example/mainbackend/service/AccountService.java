@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mainbackend.dto.RequestUser;
+import org.example.mainbackend.dto.UserLoginDTO;
 import org.example.mainbackend.exception.ServerExceptions;
 import org.example.mainbackend.model.Role;
 import org.example.mainbackend.model.User;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final YandexIdService yandexIdService;
     private final Set<String> authURLs = new HashSet<>();
 
     public boolean needAuthorisation(String url) {
@@ -75,12 +77,12 @@ public class AccountService {
         var user = findUser(userName);
         if (user == null) {
             log.warn("User {} not found", userName);
-            ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("User not found: " + userName).throwException();
+            ServerExceptions.NOT_FOUND.moreInfo("User not found: " + userName).throwException();
         }
         var role = roleRepository.findByName(roleName);
         if (role == null ) {
             log.warn("Role {} not found", roleName);
-            ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("Role not found: " + roleName).throwException();
+            ServerExceptions.NOT_FOUND.moreInfo("Role not found: " + roleName).throwException();
         }
         log.info("Added role {} to user {}", roleName, userName);
         user.getRoles().add(role);
@@ -132,10 +134,6 @@ public class AccountService {
         if (userO == null) {
             User newUser = new User();
             newUser.setUsername(response.id());
-            newUser.setNickname(response.display_name());
-            if (response.display_name() == null) {
-                newUser.setNickname(response.real_name());
-            }
             var roleFound = roleRepository.findByName(role);
             if (roleFound == null ) {
                 ServerExceptions.ROLE_NOT_EXISTS.throwException();
@@ -193,8 +191,6 @@ public class AccountService {
     public void updateRefreshToken(String username, String refreshToken) {
         var user = getUser(username);
         user.setRefreshToken(refreshToken);
-        log.info("refresh token {}", refreshToken);
-        log.info("Refresh token updated {}-{}", username, refreshToken);
     }
 
     @Transactional
@@ -202,22 +198,16 @@ public class AccountService {
         var user = getUser(username);
 
         user.setAccessToken(accessToken);
-        log.info("access token {}", accessToken);
-        log.info("Access token updated {}-{}", username, accessToken);
 //        saveUser(user);
 
     }
 
     public String getRefreshToken(String username) {
-        log.warn("get user refresh: {}", getUser(username));
-        log.warn("get user {} accessToken", username);
         return getUser(username).getRefreshToken();
 
     }
 
     public String getAccessToken(String username) {
-        log.info("user accessToken {}", username);
-        log.warn("get user {} accessToken", username);
         return getUser(username).getAccessToken();
 
     }
