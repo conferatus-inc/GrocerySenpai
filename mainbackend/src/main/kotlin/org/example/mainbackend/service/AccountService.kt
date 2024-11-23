@@ -146,7 +146,7 @@ class AccountService(
             if (userRole == null) {
                 ServerExceptions.ROLE_NOT_EXISTS.moreInfo("ROLE_USER not exists").throwException()
             }
-            newUser.roles = java.util.Set.of(userRole, roleFound)
+            newUser.roles = mutableSetOf(userRole!!, roleFound!!)
             newUser = userRepository.save(newUser)
             userO = newUser
         }

@@ -27,10 +27,10 @@ class YandexIdService {
         val first_name: String,
         val last_name: String,
         val sex: String,
-        val default_email: String,
-        val emails: List<String>,
-        val default_avatar_id: String,
-        val is_avatar_empty: Boolean,
+//        val default_email: String,
+//        val emails: List<String>,
+//        val default_avatar_id: String,
+//        val is_avatar_empty: Boolean,
         val psuid: String,
     )
 

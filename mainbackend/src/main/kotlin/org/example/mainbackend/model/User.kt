@@ -25,9 +25,9 @@ data class User(
     @Size(min = 5, message = "At least 5 characters")
     @Column(nullable = false)
     var username: String,
-    @Column(nullable = false)
+//    @Column(nullable = false)
     var accessToken: String? = null,
-    @Column(nullable = false)
+//    @Column(nullable = false)
     var refreshToken: String? = null,
     @ManyToMany(fetch = FetchType.EAGER)
     var roles: MutableSet<Role> = mutableSetOf(),
