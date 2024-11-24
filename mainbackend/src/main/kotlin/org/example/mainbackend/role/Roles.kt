@@ -43,11 +43,12 @@ class Roles {
             mustHaveRole(RoleName.ROLE_ADMIN)
         }
 
-        private fun greaterPermission(roles: Set<RoleName>) {
-            if (roles.contains(RoleName.ROLE_ROOT)) {
+        fun greaterPermission(roles: Set<Role>) {
+            val roleNames = roles.map(Role::name).toSet()
+            if (roleNames.contains(RoleName.ROLE_ROOT)) {
                 log.warn("Permission denied, doesnt have access")
                 ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs GOD properties").throwException()
-            } else if (roles.contains(RoleName.ROLE_ADMIN)) {
+            } else if (roleNames.contains(RoleName.ROLE_ADMIN)) {
                 mustBeRoot()
             } else if (roles.isEmpty()) {
                 mustBeUser()
@@ -56,18 +57,17 @@ class Roles {
             }
         }
 
-        fun greaterPermission(roles: Set<Role>): String {
-            greaterPermission(roles.map(Role::name).toSet())
-            return "aboba" // platform declaration clash
-        }
-
         fun greaterPermission(role: RoleName) {
-            if (role == RoleName.ROLE_ROOT) {
-                ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs God access")
-            } else if (role == RoleName.ROLE_ADMIN) {
-                mustBeRoot()
-            } else {
-                mustBeAdmin()
+            when (role) {
+                RoleName.ROLE_ROOT -> {
+                    ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs God access")
+                }
+                RoleName.ROLE_ADMIN -> {
+                    mustBeRoot()
+                }
+                else -> {
+                    mustBeAdmin()
+                }
             }
         }
 
