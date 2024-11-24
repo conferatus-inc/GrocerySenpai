@@ -14,6 +14,7 @@ import org.example.mainbackend.role.Roles
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.HashSet
 
 @Service
 @Transactional
@@ -24,9 +25,14 @@ class AccountService(
     private val yandexIdService: YandexIdService,
 ) {
     private val authURLs: MutableSet<String> = HashSet()
+    private val notAuthURLs: MutableSet<String> = hashSetOf("/api/accounts/login")
 
     fun needAuthorisation(url: String): Boolean {
         return authURLs.contains(url)
+    }
+
+    fun notNeedAuthorisation(url: String): Boolean {
+        return notAuthURLs.contains(url)
     }
 
     fun addAuthURL(url: String) {
@@ -57,7 +63,7 @@ class AccountService(
                 notExists.add(role)
             }
         }
-        if (!notExists.isEmpty()) {
+        if (notExists.isNotEmpty()) {
             log.error("for {}: Roles not exists {}", userName, notExists)
             ServerExceptions.ROLE_NOT_EXISTS.moreInfo("Roles not exists: $notExists").throwException()
         }

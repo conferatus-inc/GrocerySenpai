@@ -18,11 +18,13 @@ import org.springframework.http.MediaType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 import kotlin.collections.ArrayList
 
 @Slf4j
+@Component
 class CustomAuthorizationFilter(
     private val accountService: AccountService,
     private val jwtUtils: JwtUtils,
@@ -49,8 +51,7 @@ class CustomAuthorizationFilter(
             return
         }
 
-        if (!accountService.needAuthorisation(request.servletPath)
-        ) {
+        if (accountService.notNeedAuthorisation(request.servletPath)) {
             log.info("Without authorization {}", request.servletPath)
             try {
                 filterChain.doFilter(request, response)
@@ -72,7 +73,8 @@ class CustomAuthorizationFilter(
                     val decodedJWT = jwtUtils.decodeJWT(token)
                     val username = decodedJWT.subject
                     log.info("user trying authorize: {}", username)
-                    val oldToken = accountService.getAccessToken(username)
+                    val user = accountService.getUser(username)
+                    val oldToken = user.accessToken
                     if (oldToken == null) {
                         log.warn("There is no access token for {}", username)
                         ServerExceptions.ACCESS_TOKEN_PROBLEM.moreInfo("There is no access token for $username")
@@ -96,7 +98,7 @@ class CustomAuthorizationFilter(
                         )
                     }
                     val authenticationToken =
-                        UsernamePasswordAuthenticationToken(username, authorities, authorities)
+                        UsernamePasswordAuthenticationToken(user, authorities, authorities)
 
                     val copy = SecurityContextHolder.getContext()
                     copy.authentication = authenticationToken

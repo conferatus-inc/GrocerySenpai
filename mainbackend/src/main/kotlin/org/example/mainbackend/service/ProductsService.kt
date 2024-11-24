@@ -1,6 +1,7 @@
 package org.example.mainbackend.service
 
 import org.example.mainbackend.model.Product
+import org.example.mainbackend.model.User
 import org.example.mainbackend.repository.ProductRepository
 import org.springframework.stereotype.Service
 
@@ -17,11 +18,19 @@ class ProductsService(
         return productRepository.save(product)
     }
 
+    fun addProductToUser(
+        product: Product,
+        user: User,
+    ): Product {
+        product.user = user
+        return productRepository.save(product)
+    }
+
     fun findAll(): List<Product> {
         return productRepository.findAll()
     }
 
-    fun findByUser(username: String): List<Product> {
-        return productRepository.findProductsByUser(accountService.getUser(username))
+    fun findByUser(user: User): List<Product> {
+        return productRepository.findProductsByUser(user)
     }
 }
