@@ -152,17 +152,17 @@ class AccountController(
                 }
                 val tokens = jwtUtils.createTokens(user)
 
-                accountService.updateAccessToken(username, tokens.access_token)
-                accountService.updateRefreshToken(username, tokens.refresh_token)
-                response.setHeader("access_token", tokens.access_token)
-                response.setHeader("refresh_token", tokens.refresh_token)
+                accountService.updateAccessToken(username, tokens.accessToken)
+                accountService.updateRefreshToken(username, tokens.refreshToken)
+                response.setHeader("access_token", tokens.accessToken)
+                response.setHeader("refresh_token", tokens.refreshToken)
                 response.contentType = MediaType.APPLICATION_JSON_VALUE
                 log.warn("User {} refresh own tokens", username)
                 ObjectMapper().writeValue(
                     response.outputStream,
                     mapOf(
-                        "access_token" to tokens.access_token,
-                        "refresh_token" to tokens.refresh_token,
+                        "access_token" to tokens.accessToken,
+                        "refresh_token" to tokens.refreshToken,
                         "roles" to user.roles.stream().map(Role::name).collect(Collectors.toList()),
                         "username" to user.username,
                     ),
@@ -193,17 +193,17 @@ class AccountController(
 
     @GetMapping("/login")
     fun login(
-        @RequestHeader(value = "Authorization", required = false) token: String?,
-        @RequestHeader(value = "role") role: RoleName?,
-    ): ResponseEntity<*> {
-        val userLoginDTO = accountService.login(token!!, role!!)
+        @RequestHeader(value = "Authorization") token: String,
+        @RequestHeader(value = "role") role: RoleName,
+    ): ResponseEntity<Map<String, Any>> {
+        val userLoginDTO = accountService.login(token, role)
         val yResponse = userLoginDTO.responseYandexId
         val user = userLoginDTO.user
         val tokens = jwtUtils.createTokens(user)
         return ResponseEntity.ok(
             mapOf(
-                "access_token" to tokens.access_token,
-                "refresh_token" to tokens.refresh_token,
+                "access_token" to tokens.accessToken,
+                "refresh_token" to tokens.refreshToken,
                 "roles" to user.roles.stream().map(Role::name).toList(),
                 "username" to user.username,
                 "display_name" to yResponse.display_name,

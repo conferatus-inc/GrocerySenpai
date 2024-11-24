@@ -1,97 +1,84 @@
-package org.example.mainbackend.role;
+package org.example.mainbackend.role
 
-import lombok.extern.slf4j.Slf4j;
-import org.example.mainbackend.exception.ServerExceptions;
-import org.example.mainbackend.model.Role;
-import org.example.mainbackend.model.enums.RoleName;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.lang.constant.Constable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j
+import org.example.mainbackend.exception.ServerExceptions
+import org.example.mainbackend.model.Role
+import org.example.mainbackend.model.enums.RoleName
+import org.slf4j.LoggerFactory
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 
 @Slf4j
-public class Roles {
-    public final static String ROOT = "ROLE_ROOT";
-    public final static String _ROOT = "ROOT";
-    public final static String ADMIN = "ROLE_ADMIN";
-    public final static String _ADMIN = "ADMIN";
-    public final static String USER = "ROLE_USER";
-    public final static String _USER = "USER";
-
-
-    public static Set<RoleName> basicRoles() {
-        return Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN);
-    }
-
-    public static boolean hasRole(RoleName role) {
-        var auths = getAuthorities();
-        if (auths == null) {
-            return false;
+class Roles {
+    companion object {
+        private fun basicRoles(): Set<RoleName> {
+            return mutableSetOf(RoleName.ROLE_USER, RoleName.ROLE_ADMIN)
         }
-        return auths.contains(role.name());
-    }
 
-    public static void mustHaveRole(RoleName role) {
-        if (!hasRole(role)) {
-            log.warn("Permission denied, doesnt have: {}", role);
-            ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs " + role + " properties").throwException();
+        private fun hasRole(role: RoleName): Boolean {
+            val auths = getAuthorities() ?: return false
+            return auths.contains(role.name)
         }
-    }
 
-    public static boolean isUserRole(RoleName role) {
-        return basicRoles().contains(role);
-    }
-
-
-    public static void mustBeRoot() {
-        mustHaveRole(RoleName.ROLE_ROOT);
-    }
-
-
-    public static void mustBeUser() {
-        mustHaveRole(RoleName.ROLE_USER);
-    }
-
-    public static void mustBeAdmin() {
-        mustHaveRole(RoleName.ROLE_ADMIN);
-    }
-
-    public static Set<String> getAuthorities() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return null;
+        private fun mustHaveRole(role: RoleName) {
+            if (!hasRole(role)) {
+                log.warn("Permission denied, doesnt have: {}", role)
+                ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs $role properties").throwException()
+            }
         }
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-    }
 
-    public static void greaterPermission(Collection<RoleName> roles) {
-        Set<RoleName> rols = new HashSet<>(roles);
-        if (rols.contains(RoleName.ROLE_ROOT)) {
-            log.warn("Permission denied, doesnt have access");
-            ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs GOD properties").throwException();
-        } else if (rols.contains(RoleName.ROLE_ADMIN)) {
-            mustBeRoot();
-        } else if (roles.isEmpty()) {
-            mustBeUser();
-        } else {
-            mustBeAdmin();
+        fun isUserRole(role: RoleName?): Boolean {
+            return basicRoles().contains(role)
         }
-    }
-    public static void greaterPermission(Set<Role> roles) {
-        greaterPermission(roles.stream().map(Role::getName).toList());
-    }
 
-    public static void greaterPermission(RoleName role) {
-        if (role.equals(RoleName.ROLE_ROOT)) {
-            ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs God access");
-        } else if (role.equals(RoleName.ROLE_ADMIN)) {
-            mustBeRoot();
-        } else {
-            mustBeAdmin();
+        private fun mustBeRoot() {
+            mustHaveRole(RoleName.ROLE_ROOT)
+        }
+
+        private fun mustBeUser() {
+            mustHaveRole(RoleName.ROLE_USER)
+        }
+
+        private fun mustBeAdmin() {
+            mustHaveRole(RoleName.ROLE_ADMIN)
+        }
+
+        private fun greaterPermission(roles: Set<RoleName>) {
+            if (roles.contains(RoleName.ROLE_ROOT)) {
+                log.warn("Permission denied, doesnt have access")
+                ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs GOD properties").throwException()
+            } else if (roles.contains(RoleName.ROLE_ADMIN)) {
+                mustBeRoot()
+            } else if (roles.isEmpty()) {
+                mustBeUser()
+            } else {
+                mustBeAdmin()
+            }
+        }
+
+        fun greaterPermission(roles: Set<Role>): String {
+            greaterPermission(roles.map(Role::name).toSet())
+            return "aboba" // platform declaration clash
+        }
+
+        fun greaterPermission(role: RoleName) {
+            if (role == RoleName.ROLE_ROOT) {
+                ServerExceptions.FORBIDDEN.moreInfo("Permission denied, needs God access")
+            } else if (role == RoleName.ROLE_ADMIN) {
+                mustBeRoot()
+            } else {
+                mustBeAdmin()
+            }
+        }
+
+        private val log = LoggerFactory.getLogger(this::class.java)
+
+        private fun getAuthorities(): Set<String>? {
+            if (SecurityContextHolder.getContext().authentication == null) {
+                return null
+            }
+            return SecurityContextHolder.getContext().authentication.authorities
+                .map { obj: GrantedAuthority -> obj.authority }.toSet()
         }
     }
 }

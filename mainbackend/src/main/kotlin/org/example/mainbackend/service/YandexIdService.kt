@@ -34,7 +34,7 @@ class YandexIdService {
         val psuid: String,
     )
 
-    fun getId(token: String): ResponseYandexId? {
+    fun getId(token: String): ResponseYandexId {
         val request =
             Request.Builder()
                 .url(path)
@@ -66,9 +66,8 @@ class YandexIdService {
             log.error(e.toString())
             log.error(e.message)
             ServerExceptions.ILLEGAL_YANDEX_TOKEN.throwException()
+            throw RuntimeException()
         }
-
-        return null
     }
 
     fun parseToken(authorization: String?): String {

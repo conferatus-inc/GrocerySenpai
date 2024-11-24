@@ -48,7 +48,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(200);
             return;
-        }
+        }   
 
         if (
                 !accountService.needAuthorisation(request.getServletPath())

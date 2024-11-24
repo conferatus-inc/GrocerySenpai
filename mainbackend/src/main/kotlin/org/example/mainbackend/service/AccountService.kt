@@ -133,7 +133,7 @@ class AccountService(
         role: RoleName,
     ): UserLoginDTO {
         log.info("starting logging with token:{} and role {}", token.substring(0, 20), role)
-        val response = yandexIdService.getId(yandexIdService.parseToken(token))!!
+        val response = yandexIdService.getId(yandexIdService.parseToken(token))
         val id = response.id
         var userO = userRepository.findByUsername(id)
         if (userO == null) {
