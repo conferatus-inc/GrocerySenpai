@@ -8,8 +8,17 @@ data class ProductsDto(
 )
 
 data class ProductDto(
+    val id: Long?,
     val category: String,
     val boughtOn: OffsetDateTime,
+    val isActive: Boolean,
+    val user: SimpleUserDto?,
 ) {
-    constructor(product: Product) : this(product.category, product.boughtOn)
+    constructor(product: Product) : this(
+        product.id!!,
+        product.category,
+        product.boughtOn,
+        product.isActive,
+        if (product.user != null) SimpleUserDto(product.user!!) else null,
+    )
 }

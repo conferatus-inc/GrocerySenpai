@@ -18,10 +18,16 @@ class SecurityConfig(
         return http
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/api/accounts/login").permitAll()
-                auth.anyRequest().authenticated()
+                with(auth) {
+                    requestMatchers(LOGIN_URL).permitAll()
+                    anyRequest().authenticated()
+                }
             }
             .addFilterBefore(customAuthorizationFilter, AnonymousAuthenticationFilter::class.java)
             .build()
+    }
+
+    companion object {
+        const val LOGIN_URL = "/api/v1/accounts/login"
     }
 }

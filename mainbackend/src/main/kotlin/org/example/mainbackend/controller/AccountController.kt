@@ -28,7 +28,7 @@ import java.io.IOException
 import java.util.stream.Collectors
 
 @RestController
-@RequestMapping(path = ["/api/accounts"])
+@RequestMapping(path = ["/api/v1/accounts"])
 @Slf4j // TODO: fix, delete or save
 class AccountController(
     private val accountService: AccountService,

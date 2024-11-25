@@ -8,16 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class ProductsService(
     private val productRepository: ProductRepository,
-    private val accountService: AccountService,
 ) {
-    fun addProductToUser(
-        product: Product,
-        username: String,
-    ): Product {
-        product.user = accountService.getUser(username)
-        return productRepository.save(product)
-    }
-
     fun addProductToUser(
         product: Product,
         user: User,
@@ -26,11 +17,26 @@ class ProductsService(
         return productRepository.save(product)
     }
 
-    fun findAll(): List<Product> {
-        return productRepository.findAll()
+    fun deleteProductByIdAndUser(
+        id: Long,
+        user: User,
+    ): Product {
+        return productRepository.deleteByIdAndUser(id, user)
+    }
+
+    fun editProduct(
+        product: Product,
+        user: User,
+    ): Product {
+        productRepository.deleteByIdAndUser(product.id!!, user)
+        return productRepository.save(product)
     }
 
     fun findByUser(user: User): List<Product> {
         return productRepository.findProductsByUser(user)
+    }
+
+    fun findActiveByUser(user: User): List<Product> {
+        return productRepository.findProductsByIsActiveAndUser(true, user)
     }
 }

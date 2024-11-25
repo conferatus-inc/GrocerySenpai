@@ -4,11 +4,19 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import org.example.mainbackend.dto.ProductDto
 import java.time.OffsetDateTime
 
 @Entity
+@Table(
+    indexes = [
+        Index(name = "idx_product_user_id", columnList = "user_id"),
+        Index(name = "idx_product_is_active_user_id", columnList = "is_active, user_id"),
+    ],
+)
 data class Product(
     @Id
     @GeneratedValue
@@ -17,6 +25,8 @@ data class Product(
     val category: String,
     @Column(nullable = false)
     val boughtOn: OffsetDateTime,
+    @Column(nullable = false)
+    val isActive: Boolean,
     //    @JoinColumn(nullable = false)
     @ManyToOne
     var user: User?,
@@ -24,6 +34,7 @@ data class Product(
     constructor(productDto: ProductDto) : this(
         category = productDto.category,
         boughtOn = productDto.boughtOn,
+        isActive = productDto.isActive,
         user = null,
     )
 }

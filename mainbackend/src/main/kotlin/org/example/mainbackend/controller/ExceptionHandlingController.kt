@@ -25,7 +25,6 @@ class ExceptionHandlingController {
                 bw.write(mapper.writeValueAsString(serverException.answer))
             }
         } catch (e: IOException) {
-//            log.error(e.getMessage());
             throw RuntimeException(e)
         }
     }
