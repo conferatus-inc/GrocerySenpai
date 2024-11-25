@@ -8,7 +8,7 @@ import jakarta.persistence.Index
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.example.mainbackend.dto.ProductDto
-import java.time.OffsetDateTime
+import java.util.Date
 
 @Entity
 @Table(
@@ -20,11 +20,11 @@ import java.time.OffsetDateTime
 data class Product(
     @Id
     @GeneratedValue
-    val id: Long? = null,
+    val id: Long?,
     @Column(nullable = false)
     val category: String,
     @Column(nullable = false)
-    val boughtOn: OffsetDateTime,
+    val boughtOn: Date,
     @Column(nullable = false)
     val isActive: Boolean,
     //    @JoinColumn(nullable = false)
@@ -32,6 +32,7 @@ data class Product(
     var user: User?,
 ) {
     constructor(productDto: ProductDto) : this(
+        id = productDto.id,
         category = productDto.category,
         boughtOn = productDto.boughtOn,
         isActive = productDto.isActive,

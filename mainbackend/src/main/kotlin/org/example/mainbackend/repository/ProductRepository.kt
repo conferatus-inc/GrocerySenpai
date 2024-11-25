@@ -12,8 +12,7 @@ interface ProductRepository : JpaRepository<Product, Long> {
         user: User,
     ): List<Product>
 
-    fun deleteByIdAndUser(
-        id: Long,
-        user: User,
-    ): Product
+//    override fun deleteById(
+//        id: Long,
+//    ): Product
 }

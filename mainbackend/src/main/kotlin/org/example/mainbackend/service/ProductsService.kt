@@ -4,6 +4,7 @@ import org.example.mainbackend.model.Product
 import org.example.mainbackend.model.User
 import org.example.mainbackend.repository.ProductRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProductsService(
@@ -21,14 +22,18 @@ class ProductsService(
         id: Long,
         user: User,
     ): Product {
-        return productRepository.deleteByIdAndUser(id, user)
+        val res = productRepository.findById(id)
+        productRepository.deleteById(id)
+        return res.get()
     }
 
+    @Transactional
     fun editProduct(
         product: Product,
         user: User,
     ): Product {
-        productRepository.deleteByIdAndUser(product.id!!, user)
+        productRepository.deleteById(product.id!!)
+        product.user = user
         return productRepository.save(product)
     }
 

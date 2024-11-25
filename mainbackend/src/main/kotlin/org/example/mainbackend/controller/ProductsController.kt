@@ -34,10 +34,10 @@ class ProductsController(
 
     @PostMapping
     fun addProduct(
-        @RequestBody purchase: ProductDto,
         @AuthenticationPrincipal user: User,
+        @RequestBody product: ProductDto,
     ): ProductDto {
-        return ProductDto(productsService.addProductToUser(Product(purchase), user))
+        return ProductDto(productsService.addProductToUser(Product(product), user))
     }
 
     @GetMapping("/delete/{id}")
@@ -50,9 +50,9 @@ class ProductsController(
 
     @PostMapping("/edit")
     fun editProduct(
-        @RequestBody purchase: ProductDto,
         @AuthenticationPrincipal user: User,
+        @RequestBody product: ProductDto,
     ): ProductDto {
-        return ProductDto(productsService.editProduct(Product(purchase), user))
+        return ProductDto(productsService.editProduct(Product(product), user))
     }
 }
