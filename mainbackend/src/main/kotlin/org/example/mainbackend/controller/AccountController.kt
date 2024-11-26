@@ -206,7 +206,7 @@ class AccountController(
                 "refresh_token" to tokens.refreshToken,
                 "roles" to user.roles.stream().map(Role::name).toList(),
                 "username" to user.username,
-                "display_name" to yResponse.display_name,
+                "login" to yResponse.login,
             ),
         )
     }
