@@ -20,6 +20,7 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 with(auth) {
                     requestMatchers(LOGIN_URL).permitAll()
+                    requestMatchers(REFRESH_URL).permitAll()
                     anyRequest().authenticated()
                 }
             }
@@ -29,5 +30,6 @@ class SecurityConfig(
 
     companion object {
         const val LOGIN_URL = "/api/v1/accounts/login"
+        const val REFRESH_URL = "/api/v1/accounts/token/refresh"
     }
 }

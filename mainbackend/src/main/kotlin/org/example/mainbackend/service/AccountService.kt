@@ -3,6 +3,7 @@ package org.example.mainbackend.service
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.example.mainbackend.configuration.SecurityConfig.Companion.LOGIN_URL
+import org.example.mainbackend.configuration.SecurityConfig.Companion.REFRESH_URL
 import org.example.mainbackend.dto.RequestUser
 import org.example.mainbackend.dto.UserLoginDTO
 import org.example.mainbackend.exception.ServerExceptions
@@ -26,7 +27,7 @@ class AccountService(
     private val yandexIdService: YandexIdService,
 ) {
     private val authURLs: MutableSet<String> = HashSet()
-    private val notAuthURLs: MutableSet<String> = hashSetOf(LOGIN_URL)
+    private val notAuthURLs: MutableSet<String> = hashSetOf(LOGIN_URL, REFRESH_URL)
 
     fun needAuthorisation(url: String): Boolean {
         return authURLs.contains(url)
