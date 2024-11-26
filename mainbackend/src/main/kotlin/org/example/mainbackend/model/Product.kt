@@ -8,7 +8,7 @@ import jakarta.persistence.Index
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.example.mainbackend.dto.ProductDto
-import java.util.Date
+import java.util.*
 
 @Entity
 @Table(
@@ -22,11 +22,11 @@ data class Product(
     @GeneratedValue
     val id: Long?,
     @Column(nullable = false)
-    val category: String,
+    var category: String,
     @Column(nullable = false)
-    val boughtOn: Date,
+    var boughtOn: Date,
     @Column(nullable = false)
-    val isActive: Boolean,
+    var isActive: Boolean,
     //    @JoinColumn(nullable = false)
     @ManyToOne
     var user: User?,

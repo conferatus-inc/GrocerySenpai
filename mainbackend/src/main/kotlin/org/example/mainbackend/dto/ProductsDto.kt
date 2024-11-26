@@ -4,15 +4,13 @@ import org.example.mainbackend.model.Product
 import java.util.*
 
 data class ProductsDto(
-    val items: List<ProductDto>,
+    val products: List<ProductDto>,
 )
 
 data class ProductDto(
     val id: Long?,
     val category: String,
-    // @DateTimeFormat(style = "dd-MM-yyyy")
-    
-    val boughtOn: Date, // 2024-03-27T22:06:14.969012300+07:00
+    val boughtOn: Date,
     val isActive: Boolean,
     val user: SimpleUserDto?,
 ) {

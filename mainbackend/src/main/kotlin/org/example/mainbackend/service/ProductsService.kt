@@ -32,9 +32,12 @@ class ProductsService(
         product: Product,
         user: User,
     ): Product {
-        productRepository.deleteById(product.id!!)
         product.user = user
-        return productRepository.save(product)
+        val prod = productRepository.findById(product.id!!).get()
+        prod.category = product.category
+        prod.boughtOn = product.boughtOn
+        prod.isActive = product.isActive
+        return productRepository.save(prod)
     }
 
     fun findByUser(user: User): List<Product> {

@@ -22,7 +22,7 @@ class ProductsController(
     fun getProductHistory(
         @AuthenticationPrincipal user: User,
     ): ProductsDto {
-        return ProductsDto(productsService.findActiveByUser(user).map { ProductDto(it) })
+        return ProductsDto(productsService.findByUser(user).map { ProductDto(it) })
     }
 
     @GetMapping("/active")
