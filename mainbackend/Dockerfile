@@ -10,3 +10,4 @@ COPY --from=build /home/gradle/src/build/libs/mainbackend-0.0.1-SNAPSHOT.jar /ap
 ENTRYPOINT ["java", "-jar", "/app/mainbackend-0.0.1-SNAPSHOT.jar"]
 EXPOSE 8080
 # FIXME не работает
+# 123
