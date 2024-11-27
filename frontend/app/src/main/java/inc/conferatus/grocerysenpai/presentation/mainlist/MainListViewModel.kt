@@ -110,6 +110,7 @@ class MainListViewModel @Inject constructor(
             .map { AfterPredictor(it.category, predict(it.dayNumbers), it.earliestDay) }
             .map { SuggestedItemDto(it.category.name, it.earliestDay.plusDays(it.daysBeforeNextBuy) ) }
             .onEach { println(it) }
+            .sortedBy { it.nextBuy }
             .toList()
     }
     

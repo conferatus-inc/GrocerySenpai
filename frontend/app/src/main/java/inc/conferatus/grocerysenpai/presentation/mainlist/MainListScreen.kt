@@ -29,6 +29,7 @@ import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainItemText
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainListEntryComponent
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import kotlin.math.max
 
 //import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -120,7 +121,7 @@ fun MainListScreen(
             items(viewModel.getSuggested(historyGroceries)) {
                 EntryComponent(
                     mainText = it.category,
-                    secondaryText = "%d days before next buy".format(ZonedDateTime.now().until(it.nextBuy, ChronoUnit.DAYS)),
+                    secondaryText = "%d days before next buy".format(max(0, ZonedDateTime.now().until(it.nextBuy, ChronoUnit.DAYS))),
                     amountText = "",
 //                    onDoneButton = { /*TODO*/ },
 //                    onRemoveButton = { /*TODO*/ })
