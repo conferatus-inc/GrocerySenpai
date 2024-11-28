@@ -1,6 +1,9 @@
 package inc.conferatus.grocerysenpai
 
+import android.content.ContentProvider
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.provider.CloudMediaProvider
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -13,21 +16,71 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.yandex.authsdk.YandexAuthException
+import com.yandex.authsdk.YandexAuthLoginOptions
+import com.yandex.authsdk.YandexAuthOptions
+import com.yandex.authsdk.YandexAuthResult
+import com.yandex.authsdk.YandexAuthSdk
+import com.yandex.authsdk.YandexAuthToken
 import dagger.hilt.android.AndroidEntryPoint
+import inc.conferatus.grocerysenpai.api.BackendApi
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
+import inc.conferatus.grocerysenpai.presentation.mainlist.Role
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private fun String.makeBearer(): String {
+        return "Bearer $this"
+    }
+
+    private fun handleResult(result: YandexAuthResult) {
+        when (result) {
+            is YandexAuthResult.Success -> onSuccessAuth(result.token)
+            is YandexAuthResult.Failure -> onProccessError(result.exception)
+            YandexAuthResult.Cancelled -> onCancelled()
+        }
+    }
+
+    private fun onSuccessAuth(token: YandexAuthToken) {
+        println(token)
+        runBlocking {
+            val res = BackendApi.loginApi.login(token.value.makeBearer(), Role.ROLE_USER)
+            println(res)
+        }
+    }
+
+    private fun onProccessError(exception: YandexAuthException) {
+        println(exception)
+    }
+
+    private fun onCancelled() {
+        println("Cancelled")
+    }
+
+    private fun startAuth() {
+        val launcher = registerForActivityResult(GrocerySenpaiApp.sdk!!.contract) { result ->
+            handleResult(result)
+        }
+        val loginOptions = YandexAuthLoginOptions()
+        launcher.launch(loginOptions)
+    }
+
     @Composable
     fun ScreenRouter() {
         val navController = rememberNavController()
@@ -107,6 +160,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startAuth()
 
 //        binding.button.setOnClickListener { scanQrCodeLauncher.launch(null) }
 
