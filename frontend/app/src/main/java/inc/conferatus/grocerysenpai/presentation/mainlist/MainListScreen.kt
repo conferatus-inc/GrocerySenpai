@@ -27,6 +27,7 @@ import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.presentation.common.component.EntryComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainItemTextInputComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.MainListEntryComponent
+import inc.conferatus.grocerysenpai.presentation.mainlist.component.SuggestedItemsEntryComponent
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.math.max
@@ -119,12 +120,11 @@ fun MainListScreen(
             }
 
             items(viewModel.getSuggested(historyGroceries)) {
-                EntryComponent(
+                SuggestedItemsEntryComponent(
                     mainText = it.category,
                     secondaryText = "%d days before next buy".format(max(0, ZonedDateTime.now().until(it.nextBuy, ChronoUnit.DAYS))),
                     amountText = "",
-//                    onDoneButton = { /*TODO*/ },
-//                    onRemoveButton = { /*TODO*/ })
+                    onAddClick = { viewModel.updateInput(it.category) }
                 )
             }
         }
