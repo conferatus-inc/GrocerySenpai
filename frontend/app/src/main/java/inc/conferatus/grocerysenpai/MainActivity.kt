@@ -94,11 +94,14 @@ class MainActivity : ComponentActivity() {
 
     private fun startRelogin() {
         runBlocking {
-            println("$refreshToken")
+            println("ABOBA $refreshToken")
             val res = BackendApi.loginApi.refresh(refreshToken!!)
+            println(res.errorBody()?.string())
 
-            accessToken = res["access_token"].toString().makeBearer()
-            refreshToken = res["refresh_token"].toString().makeBearer()
+            accessToken = res.body()!!["access_token"].toString().makeBearer()
+            refreshToken = res.body()!!["refresh_token"].toString().makeBearer()
+
+            sharedPreferencesEditor!!.putString("refresh_token", refreshToken).apply()
         }
     }
 

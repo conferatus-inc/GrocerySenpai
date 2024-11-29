@@ -1,5 +1,6 @@
 package inc.conferatus.grocerysenpai.api
 
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -14,7 +15,7 @@ interface LoginApiService {
     @POST("accounts/token/refresh")
     suspend fun refresh(
         @Header("Authorization") token: String,
-    ): Map<String, Any>
+    ): Response<Map<String, Any>>
 
     @GET("accounts/token/logout")
     suspend fun logout(
