@@ -30,11 +30,11 @@ import com.yandex.authsdk.YandexAuthSdk
 import com.yandex.authsdk.YandexAuthToken
 import dagger.hilt.android.AndroidEntryPoint
 import inc.conferatus.grocerysenpai.api.BackendApi
+import inc.conferatus.grocerysenpai.api.Role
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListViewModel
-import inc.conferatus.grocerysenpai.presentation.mainlist.Role
 import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
