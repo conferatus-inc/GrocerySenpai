@@ -124,7 +124,7 @@ fun MainListScreen(
                     mainText = it.category,
                     secondaryText = "%d days before next buy".format(max(0, ZonedDateTime.now().until(it.nextBuy, ChronoUnit.DAYS))),
                     amountText = "",
-                    onAddClick = { viewModel.updateInput(it.category) }
+                    onAddClick = { viewModel.updateInput(it.category); viewModel.addItem() }
                 )
             }
         }
