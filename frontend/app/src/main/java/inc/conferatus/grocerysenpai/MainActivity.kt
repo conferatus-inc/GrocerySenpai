@@ -29,8 +29,11 @@ import com.yandex.authsdk.YandexAuthResult
 import com.yandex.authsdk.YandexAuthSdk
 import com.yandex.authsdk.YandexAuthToken
 import dagger.hilt.android.AndroidEntryPoint
+import inc.conferatus.grocerysenpai.GrocerySenpaiApp.Companion.sharedPreferences
+import inc.conferatus.grocerysenpai.GrocerySenpaiApp.Companion.sharedPreferencesEditor
 import inc.conferatus.grocerysenpai.api.BackendApi
 import inc.conferatus.grocerysenpai.api.Role
+import inc.conferatus.grocerysenpai.model.items.GroceryItem
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryScreen
 import inc.conferatus.grocerysenpai.presentation.mainlist.HistoryViewModel
 import inc.conferatus.grocerysenpai.presentation.mainlist.MainListScreen
@@ -39,6 +42,7 @@ import inc.conferatus.grocerysenpai.ui.theme.GrocerySenpaiTheme
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -62,6 +66,13 @@ class MainActivity : ComponentActivity() {
         runBlocking {
             val res = BackendApi.loginApi.login(token.value.makeBearer(), Role.ROLE_USER)
             println(res)
+
+            accessToken = res["access_token"].toString().makeBearer()
+            refreshToken = res["refresh_token"].toString().makeBearer()
+
+            sharedPreferencesEditor!!.putString("refresh_token", refreshToken).apply()
+
+            println(sharedPreferences!!.getString("refresh_token", null))
         }
     }
 
@@ -79,6 +90,16 @@ class MainActivity : ComponentActivity() {
         }
         val loginOptions = YandexAuthLoginOptions()
         launcher.launch(loginOptions)
+    }
+
+    private fun startRelogin() {
+        runBlocking {
+            println("$refreshToken")
+            val res = BackendApi.loginApi.refresh(refreshToken!!)
+
+            accessToken = res["access_token"].toString().makeBearer()
+            refreshToken = res["refresh_token"].toString().makeBearer()
+        }
     }
 
     @Composable
@@ -112,7 +133,8 @@ class MainActivity : ComponentActivity() {
 
                             coroutineScope.launch {
                                 // TODO
-//                                val res = BackendApi.qrApi.getQrData(input.value);
+//                                val res = BackendApi.qrApi.getQrData(accessToken!!, input.value);
+//                                res.products.forEach { historyViewModel.addItem(GroceryItem(it)) }
                             }
 
                         }
@@ -161,7 +183,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startAuth()
+        if (GrocerySenpaiApp.sdk != null) {
+            startAuth()
+        }
+        else {
+            startRelogin()
+        }
 
 //        binding.button.setOnClickListener { scanQrCodeLauncher.launch(null) }
 
@@ -176,5 +203,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        var accessToken: String? = null
+        var refreshToken: String? = null
     }
 }
