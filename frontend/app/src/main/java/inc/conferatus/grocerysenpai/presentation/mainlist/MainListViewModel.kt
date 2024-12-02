@@ -6,6 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import inc.conferatus.grocerysenpai.api.AuthService
+import inc.conferatus.grocerysenpai.api.BackendApi
+import inc.conferatus.grocerysenpai.api.ChangeDto
+import inc.conferatus.grocerysenpai.api.ChangeType
+import inc.conferatus.grocerysenpai.api.ProductDto
 import inc.conferatus.grocerysenpai.api.SuggestedItemDto
 import inc.conferatus.grocerysenpai.model.CategoriesListSingleton
 import inc.conferatus.grocerysenpai.model.items.CategoryItem
@@ -14,7 +19,9 @@ import inc.conferatus.grocerysenpai.model.predict
 import inc.conferatus.grocerysenpai.model.repository.GroceryRepository
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.byName
 import inc.conferatus.grocerysenpai.model.util.CategoriesUtils.Companion.filterCategories
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
@@ -38,16 +45,77 @@ class MainListViewModel @Inject constructor(
         validateInput()
     }
 
-    fun addItem() {
+    private suspend fun fetchDataFromBackend() {
+        val changes =
+            BackendApi.changesApi.getChanges(AuthService.accessToken, AuthService.lastUpdatedTime)
+
+
+        println(AuthService.lastUpdatedTime)
+
+        AuthService.lastUpdatedTime = Instant.now()
+
+        println("FNSDJFBNABK:SFBAKSF")
+
+        for (change in changes) {
+            when (change.changeType) {
+                ChangeType.ADD -> {
+                    if (change.product.boughtOn == Instant.EPOCH) {
+                        change.product.boughtOn = null
+                    }
+                    viewModelScope.launch { groceryRepository.insertGrocery(change.product.toGrocery()) }
+                }
+
+                ChangeType.EDIT -> {
+                    if (change.product.boughtOn == Instant.EPOCH) {
+                        change.product.boughtOn = null
+                    }
+                    viewModelScope.launch { groceryRepository.updateGrocery(change.product.toGrocery()) }
+                }
+
+                ChangeType.DELETE -> {
+                    if (change.product.boughtOn == Instant.EPOCH) {
+                        change.product.boughtOn = null
+                    }
+                    viewModelScope.launch { groceryRepository.deleteGrocery(change.product.toGrocery()) }
+                }
+            }
+            println(change)
+        }
+    }
+
+    suspend fun startDataFetching() {
+        while (true) {
+            fetchDataFromBackend()
+            delay(3000)
+        }
+    }
+
+    suspend fun addItem() {
+        val item = BackendApi.changesApi.makeChanges(
+            AuthService.accessToken,
+            listOf(
+                ChangeDto(
+                    ProductDto(
+                        category = inputCategory!!.id.toString(),
+                        boughtOn = Instant.EPOCH,
+                        isActive = true
+                    ),
+                    changeType = ChangeType.ADD,
+                    changeTime = Instant.now()
+                )
+            )
+        ).first()
+
         if (inputCategory == null) {
             throw RuntimeException("насрал") // todo норм исключение сделать
         }
 
         val newItem = GroceryItem(
+            id = item.id!!.toInt(),
             category = inputCategory!!,
             description = "",
             amount = 1,
-            amountPostfix = "шт",
+            amountPostfix = "",
         )
 
         viewModelScope.launch {
@@ -57,13 +125,45 @@ class MainListViewModel @Inject constructor(
         updateInput("")
     }
 
-    fun removeItem(item: GroceryItem) {
+    suspend fun removeItem(item: GroceryItem) {
+        BackendApi.changesApi.makeChanges(
+            AuthService.accessToken,
+            listOf(
+                ChangeDto(
+                    ProductDto(
+                        id = item.id.toLong(),
+                        category = item.category.id.toString(),
+                        boughtOn = Instant.EPOCH,
+                        isActive = true
+                    ),
+                    changeType = ChangeType.DELETE,
+                    changeTime = Instant.now()
+                )
+            )
+        )
+
         viewModelScope.launch {
             groceryRepository.deleteGrocery(item)
         }
     }
 
-    fun buyItem(item: GroceryItem) { // todo maybe rename??
+    suspend fun buyItem(item: GroceryItem) { // todo maybe rename??
+        BackendApi.changesApi.makeChanges(
+            AuthService.accessToken,
+            listOf(
+                ChangeDto(
+                    ProductDto(
+                        id = item.id.toLong(),
+                        category = item.category.id.toString(),
+                        boughtOn = Instant.now(),
+                        isActive = false
+                    ),
+                    changeType = ChangeType.EDIT,
+                    changeTime = Instant.now()
+                )
+            )
+        )
+
         viewModelScope.launch {
             groceryRepository.updateGroceryBoughtDate(item, ZonedDateTime.now())
         }
@@ -97,7 +197,7 @@ class MainListViewModel @Inject constructor(
         val earliestDay: ZonedDateTime
     )
 
-    fun getSuggested(history: List<GroceryItem>) : List<SuggestedItemDto> {
+    fun getSuggested(history: List<GroceryItem>): List<SuggestedItemDto> {
         return categoriesListSingleton.categories
             .asSequence()
             .map { category -> history.filter { it.category.name == category.name } }
@@ -108,12 +208,17 @@ class MainListViewModel @Inject constructor(
                 BeforePredictor(list[0].category, days, earliestBuy)
             }
             .map { AfterPredictor(it.category, predict(it.dayNumbers), it.earliestDay) }
-            .map { SuggestedItemDto(it.category.name, it.earliestDay.plusDays(it.daysBeforeNextBuy) ) }
+            .map {
+                SuggestedItemDto(
+                    it.category.name,
+                    it.earliestDay.plusDays(it.daysBeforeNextBuy)
+                )
+            }
             .onEach { println(it) }
             .sortedBy { it.nextBuy }
             .toList()
     }
-    
+
     fun genFakes() {
         viewModelScope.launch {
             groceryRepository.insertGrocery(
@@ -355,7 +460,6 @@ class MainListViewModel @Inject constructor(
             )
         }
     }
-
 
 
 //    public fun getByQr(data: String) {
