@@ -17,8 +17,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,7 @@ import inc.conferatus.grocerysenpai.R
 import inc.conferatus.grocerysenpai.model.util.HistoryGroceriesUtils.Companion.groupByDateDescending
 import inc.conferatus.grocerysenpai.presentation.common.component.OnEmptyMessageComponent
 import inc.conferatus.grocerysenpai.presentation.mainlist.component.HistoryEntryComponent
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -33,10 +36,15 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
+    viewModel2: MainListViewModel,
     onGoBackClick: () -> Unit,
     onGoToQrScannerClick: () -> Unit
 ) {
     val historyGroceries by viewModel.historyGroceries.collectAsState(initial = emptyList())
+
+    LaunchedEffect(viewModel) {
+        viewModel2.startDataFetching()
+    }
 
     Scaffold(
         topBar = {
@@ -86,12 +94,13 @@ fun HistoryScreen(
                         }
 
                         items(pair.second) {
+                            val coroutineScope = rememberCoroutineScope()
                             HistoryEntryComponent(
                                 mainText = it.category.name,
                                 secondaryText = it.description,
                                 amountText = "%d %s".format(it.amount, it.amountPostfix),
-                                onAddClick = { viewModel.addItem(it) },
-                                onRemoveClick = { viewModel.removeItem(it) },
+                                onAddClick = { coroutineScope.launch { viewModel.addItem(it) } },
+                                onRemoveClick = { coroutineScope.launch { viewModel.removeItem(it) } },
                                 modifier = Modifier.animateItemPlacement()
                             )
                         }
