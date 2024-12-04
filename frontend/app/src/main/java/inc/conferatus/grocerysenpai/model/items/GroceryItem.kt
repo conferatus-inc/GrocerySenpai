@@ -14,13 +14,14 @@ data class GroceryItem(
     constructor(qrProductDto: QrProductDto) :
             this(
                 (53245..624574252).random(),
-                CategoryItem((53245..624574252).random(), qrProductDto.category)
-//                xdd ?: CategoryItem(
-//                    (53245..624574252).random(),
-//                    "Чай"
-//                ), ""
-                , "",
-                qrProductDto.amount, "", ZonedDateTime.now()
+                CategoryItem(
+                    id = (53245..624574252).random(),
+                    name = qrProductDto.category
+                ),
+                "",
+                1,
+                "",
+                ZonedDateTime.now()
             )
 
 }
