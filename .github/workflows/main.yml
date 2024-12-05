@@ -11,27 +11,41 @@ jobs:
       - name: directory tree
         run: tree
 
-      - name: build and deploy
-        env:
-          KEYP: ${{ secrets.KEYP }}
-          KEYYA: ${{ secrets.KEYYA }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+      - name: build
+
         run: |
           cd ./mainbackend;
           ls -al;
           docker ps;
           docker build -t grocery_backend:latest .;
+          docker image ls;
           docker save -o /tmp/grocery_backend.tar grocery_backend:latest;
-          cd /tmp;
           ls -al;
-          echo -n "${KEYP}" > id_ed25519.pub;
-          echo -n "${KEYYA}" > id_ed25519;
-          chmod 400 id_ed25519.pub;
-          chmod 400 id_ed25519;
-          echo "${KEYYA}" | ssh-add -;
-          ssh-add -T id_ed25519.pub;
-          ls -al;
-          scp -oStrictHostKeyChecking=no /tmp/grocery_backend.tar ${SSH_USER}@${SSH_HOST}:/tmp;
-          scp -oStrictHostKeyChecking=no update.sh ${SSH_USER}@${SSH_HOST}:/tmp;
-          ssh ${SSH_USER}@${SSH_HOST} 'cd /tmp; ls -l; sh update.sh;';
+          echo "ABOBA";
+          ls /tmp -al;
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/cloud.key
+          chmod 600 ~/.ssh/cloud.key
+          cat >>~/.ssh/config <<END
+            Host cloud
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/cloud.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.KEYYA }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+      - name: deploy
+        env:
+          KEYYA: ${{ secrets.KEYYA }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          scp -oStrictHostKeyChecking=no /tmp/grocery_backend.tar cloud:/tmp;
+          scp -oStrictHostKeyChecking=no ./mainbackend/update.sh cloud:/tmp;
+          ssh cloud 'cd /tmp; ls -l; sh ./mainbackend/update.sh;';
