@@ -9,6 +9,9 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.example.mainbackend.dto.ProductDto
 import org.example.mainbackend.dto.SimpleUserDto
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import java.time.Instant
 import java.util.Date
 
 @Entity
@@ -31,7 +34,13 @@ data class Product(
     //    @JoinColumn(nullable = false)
     @ManyToOne
     var user: User?,
-) : BaseEntity() {
+    @Column(nullable = false)
+    var isDeleted: Boolean = false,
+    @CreatedDate
+    var created: Instant = Instant.now(),
+    @LastModifiedDate
+    var updated: Instant = Instant.now(),
+) {
     constructor(productDto: ProductDto) : this(
         id = productDto.id,
         category = productDto.category,
@@ -48,5 +57,6 @@ fun Product.toProductDto(): ProductDto {
         boughtOn = boughtOn,
         isActive = isActive,
         user = if (user != null) SimpleUserDto(user!!) else null,
+        isDeleted = isDeleted,
     )
 }

@@ -5,6 +5,7 @@ import org.example.mainbackend.model.User
 import org.example.mainbackend.repository.ProductRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Service
 class ProductsService(
@@ -22,9 +23,9 @@ class ProductsService(
         id: Long,
         user: User,
     ): Product {
-        val res = productRepository.findById(id)
-        productRepository.deleteById(id)
-        return res.get()
+        val res = productRepository.findById(id).get()
+        res.isDeleted = true
+        return productRepository.save(res)
     }
 
     @Transactional
@@ -40,11 +41,28 @@ class ProductsService(
         return productRepository.save(prod)
     }
 
+    fun findAllByUserAndTime(
+        user: User,
+        fromTime: Instant,
+    ): List<Product> {
+        return productRepository.findProductsByUserAndUpdated(
+            user = user,
+            updated = fromTime,
+        )
+    }
+
     fun findByUser(user: User): List<Product> {
-        return productRepository.findProductsByUser(user)
+        return productRepository.findProductsByIsDeletedAndUser(
+            isDeleted = false,
+            user = user,
+        )
     }
 
     fun findActiveByUser(user: User): List<Product> {
-        return productRepository.findProductsByIsActiveAndUser(true, user)
+        return productRepository.findProductsByIsActiveAndIsDeletedAndUser(
+            isActive = true,
+            isDeleted = false,
+            user = user,
+        )
     }
 }

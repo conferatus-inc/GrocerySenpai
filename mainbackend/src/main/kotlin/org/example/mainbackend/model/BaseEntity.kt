@@ -6,7 +6,7 @@ import java.time.Instant
 
 open class BaseEntity(
     @CreatedDate
-    var created: Instant = Instant.now(),
+    open var created: Instant = Instant.now(),
     @LastModifiedDate
-    var updated: Instant = Instant.now(),
+    open var updated: Instant = Instant.now(),
 )
