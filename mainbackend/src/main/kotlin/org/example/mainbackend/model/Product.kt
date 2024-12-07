@@ -8,7 +8,8 @@ import jakarta.persistence.Index
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.example.mainbackend.dto.ProductDto
-import java.util.*
+import org.example.mainbackend.dto.SimpleUserDto
+import java.util.Date
 
 @Entity
 @Table(
@@ -30,12 +31,22 @@ data class Product(
     //    @JoinColumn(nullable = false)
     @ManyToOne
     var user: User?,
-) {
+) : BaseEntity() {
     constructor(productDto: ProductDto) : this(
         id = productDto.id,
         category = productDto.category,
         boughtOn = productDto.boughtOn,
         isActive = productDto.isActive,
         user = null,
+    )
+}
+
+fun Product.toProductDto(): ProductDto {
+    return ProductDto(
+        id = id,
+        category = category,
+        boughtOn = boughtOn,
+        isActive = isActive,
+        user = if (user != null) SimpleUserDto(user!!) else null,
     )
 }
