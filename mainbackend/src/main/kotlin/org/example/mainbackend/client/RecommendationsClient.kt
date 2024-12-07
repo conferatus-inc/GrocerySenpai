@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 
 @FeignClient(value = "recommendations")
+@Deprecated(message = "теперь это на мобилке")
 interface RecommendationsClient {
     @PostMapping("/recommendations")
     fun startRecommendationGeneration(products: ProductsDto): Long

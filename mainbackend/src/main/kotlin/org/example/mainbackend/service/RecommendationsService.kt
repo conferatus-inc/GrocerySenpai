@@ -6,6 +6,7 @@ import org.example.mainbackend.dto.RecommendationsDto
 import org.springframework.stereotype.Service
 
 @Service
+@Deprecated(message = "теперь это на мобилке")
 class RecommendationsService(
     private val recommendationsClient: RecommendationsClient,
 ) {

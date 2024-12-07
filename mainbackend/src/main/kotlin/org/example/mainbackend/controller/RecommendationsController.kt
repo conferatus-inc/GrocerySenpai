@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/recommendations")
+@Deprecated(message = "теперь это на мобилке")
 class RecommendationsController(
     private val recommendationsService: RecommendationsService,
 ) {
