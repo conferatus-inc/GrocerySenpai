@@ -5,6 +5,7 @@ from fastapi import FastAPI
 import time
 from fastapi.middleware.cors import CORSMiddleware
 from selenium.webdriver.common.by import By
+
 txt = """1  Ананасы
 2  Апельсины
 3  Базилик
@@ -120,29 +121,32 @@ txt = """1  Ананасы
 categories = list(map(lambda k: " ".join(k.split()[1:]), txt))
 print(categories)
 
-def subStr(word:str, categ:str):
+
+def subStr(word: str, categ: str):
     word = word.lower()
     categ = categ.lower()
     res = 0
     res += (word in categ) + (categ in word)
-    res*=50
+    res *= 50
     word_len = len(word)
     categ_len = len(categ)
-    if word_len>1:
-        res += (word[::len(word)-1] in categ)
-    if categ_len>1:
-        res += (categ[::len(categ)-1] in word)
-    res*=5
-    if word_len>2:
+    if word_len > 1:
+        res += (word[::len(word) - 1] in categ)
+    if categ_len > 1:
+        res += (categ[::len(categ) - 1] in word)
+    res *= 5
+    if word_len > 2:
         res += (word[::len(word) - 2] in categ)
-    if categ_len>2:
+    if categ_len > 2:
         res += (categ[::len(categ) - 2] in word)
     return res
 
+
 def maybeCategory(word: str):
-    ls = list(map(lambda categ: (subStr(word, categ),categ), categories))
+    ls = list(map(lambda categ: (subStr(word, categ), categ), categories))
     sorted = max(ls, key=lambda k: k[0])
     return sorted
+
 
 def maybeStrCategory(words: str):
     words = words.split()
@@ -177,7 +181,7 @@ def getProducts(raw_qr_code, browser_driver, text_field, button_element):
         tmp = [y for y in (map(lambda x: x.text, product_props))]
         lst = tmp[-1]
         name = tmp[1]
-        answer = {"category":maybeStrCategory(name), "amount":float(tmp[-2])}
+        answer = {"category": maybeStrCategory(name), "amount": float(tmp[-2])}
         if any(map(lambda k: k.isdigit(), lst)):
             pass
         product_list.append(answer)
