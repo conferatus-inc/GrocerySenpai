@@ -5,6 +5,7 @@ jobs:
   python_qr:
     runs-on: self-hosted
     name: python QR back
+    needs: backend_job
     environment: backend
     steps:
       - uses: actions/checkout@v3
