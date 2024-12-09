@@ -14,16 +14,7 @@ data class ProductDto(
     val isActive: Boolean,
     val user: SimpleUserDto?,
     val isDeleted: Boolean?,
-) {
-    constructor(product: Product) : this(
-        product.id!!,
-        product.category,
-        product.boughtOn,
-        product.isActive,
-        if (product.user != null) SimpleUserDto(product.user!!) else null,
-        product.isDeleted,
-    )
-}
+)
 
 fun ProductDto.toProduct(): Product {
     return Product(

@@ -8,7 +8,6 @@ import jakarta.persistence.Index
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.example.mainbackend.dto.ProductDto
-import org.example.mainbackend.dto.SimpleUserDto
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
@@ -40,15 +39,7 @@ data class Product(
     var created: Instant = Instant.now(),
     @LastModifiedDate
     var updated: Instant = Instant.now(),
-) {
-    constructor(productDto: ProductDto) : this(
-        id = productDto.id,
-        category = productDto.category,
-        boughtOn = productDto.boughtOn,
-        isActive = productDto.isActive,
-        user = null,
-    )
-}
+)
 
 fun Product.toProductDto(): ProductDto {
     return ProductDto(
@@ -56,7 +47,7 @@ fun Product.toProductDto(): ProductDto {
         category = category,
         boughtOn = boughtOn,
         isActive = isActive,
-        user = if (user != null) SimpleUserDto(user!!) else null,
+        user = if (user != null) user!!.toSimpleUserDto() else null,
         isDeleted = isDeleted,
     )
 }

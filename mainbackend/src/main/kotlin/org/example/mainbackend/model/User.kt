@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.validation.constraints.Size
+import org.example.mainbackend.dto.SimpleUserDto
 
 @Entity
 @Table(
@@ -34,3 +35,10 @@ data class User(
     @OneToMany(fetch = FetchType.EAGER)
     val products: MutableSet<Product> = mutableSetOf(),
 )
+
+fun User.toSimpleUserDto(): SimpleUserDto {
+    return SimpleUserDto(
+        id = id!!,
+        username = username,
+    )
+}
