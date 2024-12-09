@@ -16,7 +16,7 @@ import java.time.Instant
 class ChangesController(
     private val changesService: ChangesService,
 ) {
-    @PostMapping("/changes")
+    @PostMapping("/")
     fun makeChanges(
         @AuthenticationPrincipal user: User,
         @RequestBody changes: List<ChangeDto>,
@@ -24,7 +24,7 @@ class ChangesController(
         changesService.makeChanges(user, changes)
     }
 
-    @GetMapping("/changes")
+    @GetMapping("/")
     fun getChanges(
         @AuthenticationPrincipal user: User,
         @RequestBody fromTime: Instant,
