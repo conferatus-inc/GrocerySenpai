@@ -1,9 +1,10 @@
+import time
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver import ChromeOptions
-from fastapi import FastAPI
-import time
-from fastapi.middleware.cors import CORSMiddleware
 from selenium.webdriver.common.by import By
 
 txt = """1  Ананасы
