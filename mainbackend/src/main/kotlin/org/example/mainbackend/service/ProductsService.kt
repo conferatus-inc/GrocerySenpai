@@ -50,7 +50,6 @@ class ProductsService(
         user: User,
         fromTime: Instant,
     ): List<Product> {
-        val a = productRepository.findProductsByUserId(user.id!!)
         return productRepository.findProductsByUserIdAndUpdatedAfter(
             userId = user.id!!,
             updated = fromTime,
