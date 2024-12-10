@@ -55,6 +55,21 @@ jobs:
       - name: directory tree
         run: echo tree
 
+      - name: Update db url
+        run: sed -i 's/<cluster_link>/${{ secrets.CLUSTER_LINK }}/' mainbackend/src/main/resources/application.properties
+
+      - name: Update db port
+        run: sed -i 's/<port>/${{ secrets.PORT }}/' mainbackend/src/main/resources/application.properties
+
+      - name: Update db name
+        run: sed -i 's/<db>/${{ secrets.DB }}/' mainbackend/src/main/resources/application.properties
+
+      - name: Update db username
+        run: sed -i 's/<username>/${{ secrets.USERNAME }}/' mainbackend/src/main/resources/application.properties
+
+      - name: Update db password
+        run: sed -i 's/<password>/${{ secrets.PASSWORD }}/' mainbackend/src/main/resources/application.properties
+
       - name: build
 
         run: |
