@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.auth0:java-jwt:4.3.0'
     compileOnly("org.projectlombok:lombok:1.18.30")
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    implementation 'org.postgresql:postgresql'
 
 }
 

@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.time.Instant
 
 interface ProductRepository : JpaRepository<Product, Long> {
-    fun findProductsByUserAndUpdated(
-        user: User,
+    fun findProductsByUserId(userId: Long): List<Product>
+
+    fun findProductsByUserIdAndUpdatedAfter(
+        userId: Long,
         updated: Instant,
     ): List<Product>
 

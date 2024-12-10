@@ -19,7 +19,7 @@ import org.example.mainbackend.dto.SimpleUserDto
         Index(name = "idx_user_username", columnList = "username"),
     ],
 )
-data class User(
+class User(
     @Id
     @GeneratedValue
     val id: Long? = null,

@@ -2,6 +2,7 @@ package org.example.mainbackend.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.Index
@@ -20,7 +21,7 @@ import java.util.Date
         Index(name = "idx_product_is_active_user_id", columnList = "is_active, user_id"),
     ],
 )
-data class Product(
+class Product(
     @Id
     @GeneratedValue
     val id: Long?,
@@ -31,7 +32,7 @@ data class Product(
     @Column(nullable = false)
     var isActive: Boolean,
     //    @JoinColumn(nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     var user: User?,
     @Column(nullable = false)
     var isDeleted: Boolean = false,

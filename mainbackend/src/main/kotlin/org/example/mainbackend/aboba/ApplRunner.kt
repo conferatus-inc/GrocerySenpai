@@ -12,8 +12,11 @@ class ApplRunner(
     private val roleRepository: RoleRepository,
 ) : ApplicationRunner {
     override fun run(args: ApplicationArguments) {
-        roleRepository.save(Role(name = RoleName.ROLE_USER))
-        roleRepository.save(Role(name = RoleName.ROLE_ADMIN))
-        roleRepository.save(Role(name = RoleName.ROLE_ROOT))
+        try {
+            roleRepository.save(Role(name = RoleName.ROLE_USER))
+            roleRepository.save(Role(name = RoleName.ROLE_ADMIN))
+            roleRepository.save(Role(name = RoleName.ROLE_ROOT))
+        } catch (ignored: Exception) {
+        }
     }
 }

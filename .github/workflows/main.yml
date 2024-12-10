@@ -3,7 +3,8 @@ on: [push]
 
 jobs:
   python_qr:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+#    runs-on: self-hosted
     name: python QR back
     needs: backend_job
     environment: backend
@@ -44,7 +45,8 @@ jobs:
       
 
   backend_job:
-    runs-on: self-hosted
+#    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: kotlin mainbackend
 #    needs: python_qr
     environment: backend

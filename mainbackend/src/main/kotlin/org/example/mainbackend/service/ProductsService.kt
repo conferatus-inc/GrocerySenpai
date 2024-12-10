@@ -3,6 +3,7 @@ package org.example.mainbackend.service
 import org.example.mainbackend.model.Product
 import org.example.mainbackend.model.User
 import org.example.mainbackend.repository.ProductRepository
+import org.example.mainbackend.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -10,13 +11,17 @@ import java.time.Instant
 @Service
 class ProductsService(
     private val productRepository: ProductRepository,
+    private val userRepository: UserRepository,
 ) {
     fun addProductToUser(
         product: Product,
         user: User,
     ): Product {
         product.user = user
-        return productRepository.save(product)
+        user.products.add(product)
+        val saved = productRepository.save(product)
+        userRepository.save(user)
+        return saved
     }
 
     fun deleteProductByIdAndUser(
@@ -45,8 +50,9 @@ class ProductsService(
         user: User,
         fromTime: Instant,
     ): List<Product> {
-        return productRepository.findProductsByUserAndUpdated(
-            user = user,
+        val a = productRepository.findProductsByUserId(user.id!!)
+        return productRepository.findProductsByUserIdAndUpdatedAfter(
+            userId = user.id!!,
             updated = fromTime,
         )
     }
