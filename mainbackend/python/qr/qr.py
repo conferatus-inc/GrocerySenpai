@@ -160,23 +160,25 @@ def maybeStrCategory(words: str):
 def getProducts(raw_qr_code, browser_driver, text_field, button_element):
     ActionChains(browser_driver) \
         .scroll_to_element(text_field) \
-        .scroll_by_amount(0, 300) \
+        .scroll_by_amount(0, 700) \
         .perform()
     text_field.clear()
     text_field.send_keys(raw_qr_code)
     text_field.click()
-    time.sleep(0.5)
+    browser_driver.implicitly_wait(0.5)
     button_element = \
         browser_driver.find_element(By.XPATH,
                                     "//div[@class='b-checkform_tab-qrraw tab-pane fade active in']//div[@class='b-checkform_btn col-sm-12']"
                                     "/button[@class='b-checkform_btn-send btn btn-primary btn-sm pull-right']")
     button_element.click()
-    time.sleep(1)
+    browser_driver.implicitly_wait(1)
     button_element.click()
-    time.sleep(1.5)
+    browser_driver.implicitly_wait(2)
     products = browser_driver.find_elements(By.XPATH, "//div[@class='b-check_place']//tr[@class='b-check_item']")
     date = browser_driver.find_element(By.XPATH, "//div[@class='b-check_place']//tr[5]/td").text
+    browser_driver.implicitly_wait(0.5)
     product_list = []
+
     for product in products:
         product_props = product.find_elements(By.XPATH, ".//td")
         tmp = [y for y in (map(lambda x: x.text, product_props))]
@@ -193,14 +195,30 @@ class QrCodeResolver:
     def __init__(self):
         print("creating")
         options = ChromeOptions()
-        options.add_argument("--headless=new")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--headless')
+        options.add_argument('--start-maximized')
+        options.add_argument("--window-size=3920,2080")
         self.driver = webdriver.Chrome(options=options)
         self.driver.get('https://proverkacheka.com/')
+        time.sleep(3)
         self.rawQrCodeTab = self.driver.find_element(By.XPATH, "//ul[@class='b-checkform_nav nav nav-tabs']/li[4]")
-        self.rawQrCodeTab.click()
-        time.sleep(0.4)
-        self.textField = self.driver.find_element(By.ID, "b-checkform_qrraw")
 
+        print(self.rawQrCodeTab.location, self.rawQrCodeTab.rect, self.rawQrCodeTab.text, self.rawQrCodeTab.tag_name, flush=True)
+
+        ActionChains(self.driver) \
+            .scroll_to_element(self.rawQrCodeTab)\
+            .click(self.rawQrCodeTab)\
+            .scroll_by_amount(0, 500)\
+            .perform()
+
+        self.rawQrCodeTab.click()
+        time.sleep(0.5)
+        self.textField = self.driver.find_element(By.ID, "b-checkform_qrraw")
+        time.sleep(0.5)
+        print("Button")
         self.button = \
             self.driver.find_element(By.XPATH,
                                      "//div[@class='b-checkform_tab-qrraw tab-pane fade active in']//div[@class='b-checkform_btn col-sm-12']"
@@ -210,8 +228,10 @@ class QrCodeResolver:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.driver.close()
 
-
+print("Preparing", flush=True)
 resolver = QrCodeResolver()
+print("Ready", flush=True)
+
 app = FastAPI()
 
 app.add_middleware(
@@ -234,3 +254,7 @@ def getQrData(raw_qr: str):
     print("qwe", raw_qr)
     prods, date = getProducts(raw_qr, resolver.driver, resolver.textField, resolver.button)
     return {'products': prods, 'date': date}
+
+@app.get('/ping')
+def getQrData():
+    return "pong"

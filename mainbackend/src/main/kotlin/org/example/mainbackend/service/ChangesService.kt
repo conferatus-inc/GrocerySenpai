@@ -3,6 +3,7 @@ package org.example.mainbackend.service
 import org.example.mainbackend.dto.ChangeDto
 import org.example.mainbackend.dto.enums.ChangeType
 import org.example.mainbackend.dto.toProduct
+import org.example.mainbackend.model.Product
 import org.example.mainbackend.model.User
 import org.example.mainbackend.model.toProductDto
 import org.springframework.stereotype.Service
@@ -15,14 +16,16 @@ class ChangesService(
     fun makeChanges(
         user: User,
         changes: List<ChangeDto>,
-    ) {
+    ): List<Product> {
+        val result = mutableListOf<Product>()
         for (change in changes) {
             when (change.changeType) {
-                ChangeType.ADD -> productsService.addProductToUser(change.product.toProduct(), user)
-                ChangeType.DELETE -> productsService.deleteProductByIdAndUser(change.product.id!!, user)
-                ChangeType.EDIT -> productsService.editProduct(change.product.toProduct(), user)
+                ChangeType.ADD -> result.add(productsService.addProductToUser(change.product.toProduct(), user))
+                ChangeType.DELETE -> result.add(productsService.deleteProductByIdAndUser(change.product.id!!, user))
+                ChangeType.EDIT -> result.add(productsService.editProduct(change.product.toProduct(), user))
             }
         }
+        return result
     }
 
     fun getChanges(

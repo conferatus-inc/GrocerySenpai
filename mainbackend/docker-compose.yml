@@ -19,6 +19,19 @@ services:
 #    ports:
 #      - "8080:8080"
 #    restart: always
+      - "8080:8080"
+    restart: always
+  qr:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    container_name: grocery-senpai-qr
+    ports:
+      - "8083:8083"
+    environment:
+      PORT: 8083
+
+#    restart: always
 #    depends_on:
 #      - database
 # lol

@@ -1,0 +1,33 @@
+#
+FROM python:3.9
+
+#
+WORKDIR /code
+
+#
+COPY ./requirements.txt /code/requirements.txt
+
+#
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+#
+RUN pip install fastapi uvicorn
+
+# install google  chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+RUN apt-get -y update
+RUN apt-get install -y google-chrome-stable
+
+# install chromedriver
+RUN apt-get install -yqq unzip
+#RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
+RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/125.0.6373.0/linux64/chromedriver-linux64.zip
+RUN unzip /tmp/chromedriver.zip '*/chromedriver' -d /tmp
+RUN mv /tmp/chromedriver-linux64/chromedriver  /usr/local/bin/chromedriver
+
+#
+COPY ./qr /code/qr
+#
+CMD ["uvicorn", "qr.qr:app", "--host", "127.0.0.1", "--port", "8084"]
+
+EXPOSE 8084
