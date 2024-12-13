@@ -1,7 +1,7 @@
 package org.example.mainbackend.dto
 
 import org.example.mainbackend.model.Product
-import java.util.Date
+import java.time.Instant
 
 data class ProductsDto(
     val products: List<ProductDto>,
@@ -10,7 +10,7 @@ data class ProductsDto(
 data class ProductDto(
     val id: Long?,
     val category: String,
-    val boughtOn: Date,
+    val boughtOn: Instant,
     val isActive: Boolean,
     val user: SimpleUserDto?,
     val isDeleted: Boolean?,

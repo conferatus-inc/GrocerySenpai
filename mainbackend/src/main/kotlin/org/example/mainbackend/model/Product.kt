@@ -12,7 +12,6 @@ import org.example.mainbackend.dto.ProductDto
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
-import java.util.Date
 
 @Entity
 @Table(
@@ -28,7 +27,7 @@ class Product(
     @Column(nullable = false)
     var category: String,
     @Column(nullable = false)
-    var boughtOn: Date,
+    var boughtOn: Instant,
     @Column(nullable = false)
     var isActive: Boolean,
     //    @JoinColumn(nullable = false)
