@@ -30,6 +30,7 @@ class ProductsService(
     ): Product {
         val res = productRepository.findById(id).get()
         res.isDeleted = true
+        res.updated = Instant.now()
         return productRepository.save(res)
     }
 
@@ -38,11 +39,12 @@ class ProductsService(
         product: Product,
         user: User,
     ): Product {
-        product.user = user
+        // product.user = user
         val prod = productRepository.findById(product.id!!).get()
         prod.category = product.category
         prod.boughtOn = product.boughtOn
         prod.isActive = product.isActive
+        prod.updated = Instant.now()
         return productRepository.save(prod)
     }
 
