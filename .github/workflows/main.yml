@@ -2,46 +2,46 @@ name: CD
 on: [push]
 
 jobs:
-  python_qr:
-    runs-on: ubuntu-latest
-#    runs-on: self-hosted
-    name: python QR back
-    needs: backend_job
-    environment: backend
-    steps:
-      - uses: actions/checkout@v3
-      - name: build
-        run: |
-          cd ./mainbackend/python;
-          docker build -t grocery_python_qr:latest .;
-          docker image ls;
-          docker save -o /tmp/grocery_python_qr.tar grocery_python_qr:latest;
-          ls /tmp -al;
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/cloud.key
-          chmod 600 ~/.ssh/cloud.key
-          cat >>~/.ssh/config <<END
-            Host cloud
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/cloud.key
-            StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.KEYYA }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-      - name: deploy
-        env:
-          KEYYA: ${{ secrets.KEYYA }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-        run: |
-          scp -oStrictHostKeyChecking=no /tmp/grocery_python_qr.tar cloud:/tmp;
-          scp -oStrictHostKeyChecking=no ./mainbackend/python/update_python_qr.sh cloud:/tmp;
-          ssh cloud 'cd /tmp; ls -l; sh ./update_python_qr.sh;';
+#  python_qr:
+#    runs-on: ubuntu-latest
+##    runs-on: self-hosted
+#    name: python QR back
+#    needs: backend_job
+#    environment: backend
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: build
+#        run: |
+#          cd ./mainbackend/python;
+#          docker build -t grocery_python_qr:latest .;
+#          docker image ls;
+#          docker save -o /tmp/grocery_python_qr.tar grocery_python_qr:latest;
+#          ls /tmp -al;
+#      - name: Configure SSH
+#        run: |
+#          mkdir -p ~/.ssh/
+#          echo "$SSH_KEY" > ~/.ssh/cloud.key
+#          chmod 600 ~/.ssh/cloud.key
+#          cat >>~/.ssh/config <<END
+#            Host cloud
+#            HostName $SSH_HOST
+#            User $SSH_USER
+#            IdentityFile ~/.ssh/cloud.key
+#            StrictHostKeyChecking no
+#          END
+#        env:
+#          SSH_USER: ${{ secrets.SSH_USER }}
+#          SSH_KEY: ${{ secrets.KEYYA }}
+#          SSH_HOST: ${{ secrets.SSH_HOST }}
+#      - name: deploy
+#        env:
+#          KEYYA: ${{ secrets.KEYYA }}
+#          SSH_USER: ${{ secrets.SSH_USER }}
+#          SSH_HOST: ${{ secrets.SSH_HOST }}
+#        run: |
+#          scp -oStrictHostKeyChecking=no /tmp/grocery_python_qr.tar cloud:/tmp;
+#          scp -oStrictHostKeyChecking=no ./mainbackend/python/update_python_qr.sh cloud:/tmp;
+#          ssh cloud 'cd /tmp; ls -l; sh ./update_python_qr.sh;';
       
 
   backend_job:
